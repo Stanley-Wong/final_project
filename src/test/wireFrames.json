@@ -1,0 +1,123 @@
+{
+    "wireFrames": [
+        {
+            "name": "Frame A",
+            "owner": "person A",
+            "panel": {
+                "bColor": "rgb(255,255,255)",
+                "size":300,
+                "items": [
+                    {
+                        "type": "Label",
+                        "x":0,
+                        "y":0,
+                        "property":"Person A WireFrame",
+                        "fontSize":25,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"rgb(0,0,0)",
+                        "borderT":1,
+                        "borderR":1
+                    },
+                    {
+                        "type": "textfield",
+                        "x":0,
+                        "y":20,
+                        "property":"input A",
+                        "fontSize":15,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"rgb(0,0,0)",
+                        "borderT":1,
+                        "borderR":1
+                    },
+                    {
+                        "type": "textfield",
+                        "x":0,
+                        "y":40,
+                        "property":"input B",
+                        "fontSize":15,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"rgb(0,0,0)",
+                        "borderT":1,
+                        "borderR":1
+                    },
+                    {
+                        "type": "button",
+                        "x":0,
+                        "y":60,
+                        "property":"Button A",
+                        "fontSize":15,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"rgb(0,0,0)",
+                        "borderT":1,
+                        "borderR":1
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Form",
+            "owner": "person B",
+            "panel": {
+                "bColor": "rgb(255,255,255)",
+                "size":400,
+                "items":[
+                    {
+                        "type": "textfield",
+                        "x":0,
+                        "y":0,
+                        "property":"name 1",
+                        "fontSize":15,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"rgb(0,0,0)",
+                        "borderT":1,
+                        "borderR":1
+                    },
+                    {
+                        "type": "textfield",
+                        "x":20,
+                        "y":0,
+                        "property":"email 1",
+                        "fontSize":15,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"rgb(0,0,0)",
+                        "borderT":1,
+                        "borderR":1
+                    },
+                    {
+                        "type": "textfield",
+                        "x":0,
+                        "y":20,
+                        "property":"name 2",
+                        "fontSize":15,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"rgb(0,0,0)",
+                        "borderT":1,
+                        "borderR":1
+                    },
+                    {
+                        "type": "textfield",
+                        "x":20,
+                        "y":20,
+                        "property":"email 2",
+                        "fontSize":15,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"rgb(0,0,0)",
+                        "borderT":1,
+                        "borderR":1
+                    },
+                    {
+                        "type": "button",
+                        "x":10,
+                        "y":40,
+                        "property":"Submit",
+                        "fontSize":15,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"rgb(0,0,0)",
+                        "borderT":1,
+                        "borderR":1
+                    }
+                ]
+            }
+        }   
+    ]
+}
