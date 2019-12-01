@@ -10,9 +10,16 @@ import labelImg from './label.png';
 
 
 class editScreen extends Component{
+
     state={
         name: "",
-        owner: ""
+        owner: "",
+        itemProperty:"",
+        fontSize:"",
+        background:"",
+        bordercolor:"",
+        borderT:"",
+        borderR:""
     }
 
     handleChange=(e)=>{
@@ -54,49 +61,27 @@ class editScreen extends Component{
         );
     }
 
-    addLabel=()=>{
-        console.log("add Label")
-        console.log(this.props.wireFramesLists[this.props.id])
-        let tempWire = this.props.wireFramesLists[this.props.id];
-        let newLabel = {
-            "type": "Label",
-            "property":"label",
-            "fontSize":25,
-            "background":"rgba(0,0,0,0)",
-            "borderColor":"black",
-            "borderT":'0px',
-            "borderR":'0px'
-        }
-        tempWire.panel.items.push(newLabel)
-        var firestore = getFirestore();
-        firestore.collection('wireFrames').doc(this.props.id).update({panel:tempWire.panel});
-    }
-
-    addTextfield=()=>{
-        console.log("add Textfield")
-        console.log(this.props.wireFramesLists[this.props.id])
-        let tempWire = this.props.wireFramesLists[this.props.id];
-        let newLabel = {
-            "type": "Textfield",
-            "property":"Textfield",
-            "fontSize":15,
-            "background":"rgb(255,255,255)",
-            "borderColor":"black",
-            "borderT":'2px',
-            "borderR":'5px'
-        }
-        tempWire.panel.items.push(newLabel)
-        var firestore = getFirestore();
-        firestore.collection('wireFrames').doc(this.props.id).update({panel:tempWire.panel});
-    }
-
     onDrag=(e)=>{
         e.dataTransfer.setData("text", e.target.id)
+    }
+
+    displayProperty(item){
+        console.log("successfully passed")
+        console.log(item)
+        this.setState({itemProperty:item.property})
+        this.setState({fontSize:item.fontSize})
+        this.setState({background:item.background})
+        this.setState({bordercolor:item.borderColor})
+        this.setState({borderT:item.borderT})
+        this.setState({borderR:item.borderR})
     }
 
     render(){
         const frames = this.props.wireFramesLists
         const id = this.props.id
+        if(this.props.wireFramesLists){
+            this.setState({currentWireframe:this.props.wireFramesLists[id]})
+        }
         return(
             <div>
             {(this.props.wireFramesLists)?(
@@ -119,8 +104,9 @@ class editScreen extends Component{
                         <div class="col s3">Close</div>
                     </div>
                     <div style={{padding:"5px", height:"118px"}}>
-                        <div class="card z-depth-0" onClick={this.addContainer}>
-                            <div class="card" style={{borderStyle:"solid", borderWidth:"2px", height:"70px"}}></div>
+                        <div class="card z-depth-0">
+                            <div class="card" style={{borderStyle:"solid", borderWidth:"2px", height:"70px"}}
+                            id="container" draggable onDragStart={(e) => this.onDrag(e)}></div>
                             <div style={{textAlign:"center"}}>Container</div>
                         </div>
                     </div>
@@ -153,10 +139,31 @@ class editScreen extends Component{
                     </div>
                 </div>
                 <div class="col s7 card grey" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", background:""}}>
-                    {(frames[id].panel)?<Panel id={this.props.id}/>:null}
+                    {(this.state.currentWireframe)?<Panel frame={this.state.currentWireframe} displayProperty={this.displayProperty}/>:null}
                 </div>
-                <div class="col s3 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px"}}>
-
+                <div class="col s3 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", position:"relative"}}>
+                    <div>Properties</div>
+                    <input value={this.state.itemProperty}></input>
+                    <div class="card" style={{height:"60px"}}>
+                        <span>FontSize:</span>
+                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.fontSize}></input>
+                    </div>
+                    <div class="card" style={{height:"60px"}}>
+                        <span>Background:</span>
+                        <input style={{display:"inline-block", width:"40%" , position:"absolute", right:"30px"}} value={this.state.background}></input>
+                    </div>
+                    <div class="card" style={{height:"60px"}}>
+                        <span>Border Color:</span>
+                        <input style={{display:"inline-block", width:"40%" , position:"absolute", right:"30px"}} value={this.state.bordercolor}></input>
+                    </div>
+                    <div class="card" style={{height:"60px"}}>
+                        <span>Border Thickness:</span>
+                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.borderT}></input>
+                    </div>
+                    <div class="card" style={{height:"60px"}}>
+                        <span>Border Radius:</span>
+                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.borderR}></input>
+                    </div>
                 </div>
             </div>):null}
             </div>
@@ -165,6 +172,7 @@ class editScreen extends Component{
 }
 
 const mapStateToProps = (state, ownProps) => {
+    console.log("editScreen ran")
     let wireFrameId = ownProps.match.params.id;
     return {
         wireFramesLists: state.firestore.data.wireFrames,

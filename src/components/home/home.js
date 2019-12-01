@@ -14,6 +14,12 @@ class home extends Component {
             {
                 name:"UNKNOWN",
                 owner:"UNKNOWN",
+                panel:{
+                    bColor:"rgb(255,255,255)",
+                    height:530,
+                    width:"none",
+                    items:[]
+                }
             }
         )
     }
