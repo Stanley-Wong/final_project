@@ -2,13 +2,7 @@ import React, { Component } from 'react';
 import FrameItem from './frameItem'
 
 class panel extends Component{
-/*     componentDidUpdate(prevProps, prevState){
-        let newItems = this.props.frame.panel.items;
-        if(newItems!=this.state.items){
-            this.setState({items:newItems})
-        }
-    } */
-
+    
     state={
         color:this.props.frame.panel.bColor,
         height:this.props.frame.panel.height,
