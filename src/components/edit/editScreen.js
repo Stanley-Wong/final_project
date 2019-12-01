@@ -5,6 +5,7 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { getFirestore } from 'redux-firestore';
 import Panel from './items/panel';
+import { Link } from 'react-router-dom';
 import frameItem from './items/frameItem';
 import labelImg from './label.png';
 
@@ -19,7 +20,8 @@ class editScreen extends Component{
         background:"",
         bordercolor:"",
         borderT:"",
-        borderR:""
+        borderR:"",
+        currentWireframe:"none"
     }
 
     handleChange=(e)=>{
@@ -76,15 +78,72 @@ class editScreen extends Component{
         this.setState({borderR:item.borderR})
     }
 
+    addLabel=()=>{
+        let newLabel = {
+            "type": "Label",
+            "property":"label",
+            "fontSize":25,
+            "background":"rgba(0,0,0,0)",
+            "borderColor":"black",
+            "borderT":'0px',
+            "borderR":'0px'
+        }
+        let tempFrame = this.state.currentWireframe;
+        tempFrame.panel.items.push(newLabel);
+        this.setState({currentWireframe:tempFrame});
+    }
+
+    addButton=()=>{
+        let newButton = {
+            "type": "Button",
+            "property":"Button",
+            "fontSize":15,
+            "background":"rgb(255,255,255)",
+            "borderColor":"black",
+            "borderT":'2px',
+            "borderR":'5px'
+        }
+        let tempFrame = this.state.currentWireframe;
+        tempFrame.panel.items.push(newButton);
+        this.setState({currentWireframe:tempFrame});
+    }
+
+    addTextfield=()=>{
+        let newTextfield = {
+            "type": "Textfield",
+            "property":"Textfield",
+            "fontSize":15,
+            "background":"rgb(255,255,255)",
+            "borderColor":"black",
+            "borderT":'2px',
+            "borderR":'5px'
+        }
+        let tempFrame = this.state.currentWireframe;
+        tempFrame.panel.items.push(newTextfield);
+        this.setState({currentWireframe:tempFrame});
+    }
+
+    showStates=()=>{
+        console.log(this.state.currentWireframe)
+    }
+
+    updateFrame=()=>{
+        console.log("this runs")
+        var firestore = getFirestore();
+        firestore.collection('wireFrames').doc(this.props.id).update({panel:this.state.currentWireframe.panel})
+    }
+
     render(){
         const frames = this.props.wireFramesLists
         const id = this.props.id
         if(this.props.wireFramesLists){
-            this.setState({currentWireframe:this.props.wireFramesLists[id]})
+            if(this.state.currentWireframe==="none"){
+                this.setState({currentWireframe:this.props.wireFramesLists[this.props.id]})
+            }
         }
         return(
             <div>
-            {(this.props.wireFramesLists)?(
+            {((this.state.currentWireframe!=="none") && (frames))?(
             <div class="row">
                 <div class="card col s6" style={{height:"50px"}}>
                     <span style={{display:"inline-block"}}>Name:&nbsp;</span>
@@ -100,7 +159,7 @@ class editScreen extends Component{
                     <div class="row" style={{borderStyle:"solid", borderWidth:"2px"}}>
                         <i class="material-icons col s2">zoom_in</i>
                         <i class="material-icons col s2">zoom_out</i>
-                        <div class="col s3">Save</div>
+                        <div onClick={this.updateFrame} class="col s3">Save</div>
                         <div class="col s3">Close</div>
                     </div>
                     <div style={{padding:"5px", height:"118px"}}>
@@ -139,7 +198,10 @@ class editScreen extends Component{
                     </div>
                 </div>
                 <div class="col s7 card grey" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", background:""}}>
-                    {(this.state.currentWireframe)?<Panel frame={this.state.currentWireframe} displayProperty={this.displayProperty}/>:null}
+                    {(this.state.currentWireframe)?
+                    <Panel frame={this.state.currentWireframe} displayProperty={this.displayProperty}
+                    addLabel={this.addLabel} addButton={this.addButton} addTextfield={this.addTextfield}/>
+                    :null}
                 </div>
                 <div class="col s3 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", position:"relative"}}>
                     <div>Properties</div>
@@ -166,6 +228,7 @@ class editScreen extends Component{
                     </div>
                 </div>
             </div>):null}
+            <button onClick={this.showStates}>click to show state</button>
             </div>
         )
     }

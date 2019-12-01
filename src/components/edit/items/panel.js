@@ -12,10 +12,14 @@ class panel extends Component{
 
     additem=(e)=>{
         e.preventDefault();
-        console.log(e.clientX)
-        console.log(e.clientY)
         var data = e.dataTransfer.getData("text");
-        console.log(data)
+        console.log(data==="label")
+        if(data==="label")
+            this.props.addLabel.call(this,e);
+        else if(data==="button")
+            this.props.addButton.call(this,e);
+        else if(data==="textfield")
+            this.props.addTextfield.call(this,e);
     }
 
     render(){
@@ -65,4 +69,4 @@ class panel extends Component{
     }
 }
 
-export default panel;
+export default panel

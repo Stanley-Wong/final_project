@@ -4,8 +4,6 @@ import Panel from "./panel"
 
 class frameItem extends Component
 {
-
-
     render(){
         if(this.props.type==="Label"){
             return <div onClick={this.props.displayProperty} style={{fontSize:this.props.fontSize, background:this.props.background}}>{this.props.property}</div>;
@@ -34,6 +32,9 @@ class frameItem extends Component
                     borderRadius:this.props.borderR
                 }
             } type="text"></input></div>)
+        }
+        else{
+            return <div></div>
         }
     }
 }
