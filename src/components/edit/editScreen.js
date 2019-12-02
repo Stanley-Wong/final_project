@@ -12,6 +12,10 @@ import labelImg from './label.png';
 
 class editScreen extends Component{
 
+    constructor(props){
+        super(props)
+        this.displayProperty = this.displayProperty.bind(this)
+    }
     state={
         name: "",
         owner: "",
@@ -21,7 +25,8 @@ class editScreen extends Component{
         bordercolor:"",
         borderT:"",
         borderR:"",
-        currentWireframe:"none"
+        currentWireframe:"none",
+        idCounter:0
     }
 
     handleChange=(e)=>{
@@ -29,24 +34,6 @@ class editScreen extends Component{
         this.setState({[target.id]: target.value});
         var firestore = getFirestore();
         firestore.collection('wireFrames').doc(this.props.id).update({[target.id]: target.value});
-    }
-
-    addButton=()=>{
-        console.log("add button")
-        console.log(this.props.wireFramesLists[this.props.id])
-        let tempWire = this.props.wireFramesLists[this.props.id];
-        let newButton = {
-            "type": "Button",
-            "property":"Button",
-            "fontSize":15,
-            "background":"rgb(255,255,255)",
-            "borderColor":"black",
-            "borderT":'2px',
-            "borderR":'5px'
-        }
-        tempWire.panel.items.push(newButton)
-        var firestore = getFirestore();
-        firestore.collection('wireFrames').doc(this.props.id).update({panel:tempWire.panel});
     }
 
     addContainer=()=>{
@@ -61,6 +48,7 @@ class editScreen extends Component{
                 }
             }
         );
+        this.setState({idCounter:this.state.idCounter+1})
     }
 
     onDrag=(e)=>{
@@ -70,6 +58,7 @@ class editScreen extends Component{
     displayProperty(item){
         console.log("successfully passed")
         console.log(item)
+        console.log(this)
         this.setState({itemProperty:item.property})
         this.setState({fontSize:item.fontSize})
         this.setState({background:item.background})
@@ -78,7 +67,9 @@ class editScreen extends Component{
         this.setState({borderR:item.borderR})
     }
 
-    addLabel=()=>{
+    addLabel=(x,y)=>{
+        console.log(x)
+        console.log(y)
         let newLabel = {
             "type": "Label",
             "property":"label",
@@ -86,14 +77,18 @@ class editScreen extends Component{
             "background":"rgba(0,0,0,0)",
             "borderColor":"black",
             "borderT":'0px',
-            "borderR":'0px'
+            "borderR":'0px',
+            "id":this.state.idCounter,
+            "xCoord":x-document.getElementById("corner").getBoundingClientRect().x-24.3,
+            "yCoord":y-document.getElementById("corner").getBoundingClientRect().y-18.75
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newLabel);
         this.setState({currentWireframe:tempFrame});
+        this.setState({idCounter:this.state.idCounter+1})
     }
 
-    addButton=()=>{
+    addButton=(x,y)=>{
         let newButton = {
             "type": "Button",
             "property":"Button",
@@ -101,14 +96,18 @@ class editScreen extends Component{
             "background":"rgb(255,255,255)",
             "borderColor":"black",
             "borderT":'2px',
-            "borderR":'5px'
+            "borderR":'5px',
+            "id":this.state.idCounter,
+            "xCoord":x-document.getElementById("corner").getBoundingClientRect().x-32,
+            "yCoord":y-document.getElementById("corner").getBoundingClientRect().y-10.625
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newButton);
         this.setState({currentWireframe:tempFrame});
+        this.setState({idCounter:this.state.idCounter+1})
     }
 
-    addTextfield=()=>{
+    addTextfield=(x,y)=>{
         let newTextfield = {
             "type": "Textfield",
             "property":"Textfield",
@@ -116,15 +115,20 @@ class editScreen extends Component{
             "background":"rgb(255,255,255)",
             "borderColor":"black",
             "borderT":'2px',
-            "borderR":'5px'
+            "borderR":'5px',
+            "id":this.state.idCounter,
+            "xCoord":x-document.getElementById("corner").getBoundingClientRect().x-102,
+            "yCoord":y-document.getElementById("corner").getBoundingClientRect().y-24.5
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newTextfield);
         this.setState({currentWireframe:tempFrame});
+        this.setState({idCounter:this.state.idCounter+1})
     }
 
     showStates=()=>{
         console.log(this.state.currentWireframe)
+        console.log(this.state.idCounter)
     }
 
     updateFrame=()=>{
@@ -200,7 +204,7 @@ class editScreen extends Component{
                 <div class="col s7 card grey" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", background:""}}>
                     {(this.state.currentWireframe)?
                     <Panel frame={this.state.currentWireframe} displayProperty={this.displayProperty}
-                    addLabel={this.addLabel} addButton={this.addButton} addTextfield={this.addTextfield}/>
+                    addLabel={this.addLabel} addButton={this.addButton} addTextfield={this.addTextfield} parent={this}/>
                     :null}
                 </div>
                 <div class="col s3 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", position:"relative"}}>
@@ -220,12 +224,13 @@ class editScreen extends Component{
                     </div>
                     <div class="card" style={{height:"60px"}}>
                         <span>Border Thickness:</span>
-                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.borderT}></input>
+                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.borderT.slice(0,this.state.borderT.length-2)}></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
                         <span>Border Radius:</span>
-                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.borderR}></input>
+                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.borderR.slice(0,this.state.borderR.length-2)}></input>
                     </div>
+                    <button>Submit Change</button>
                 </div>
             </div>):null}
             <button onClick={this.showStates}>click to show state</button>
