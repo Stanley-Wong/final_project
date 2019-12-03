@@ -4,9 +4,32 @@ import Panel from "./panel"
 
 class frameItem extends Component
 {
+
+
+    dragItem=(e)=>{
+        e.preventDefault();
+        console.log("dragging")
+        document.onmousemove = this.dragging;
+        document.onmouseup = this.moveItem;
+    }
+
+    moveItem(e){
+        console.log(e.clientX)
+        console.log(e.clientY)
+        console.log("x moved by:"+e.clientX)
+        console.log("y moved by"+e.clientY)
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+
+    dragging=(e)=>{
+        this.props.dragging.call(this, e.clientX, e.clientY, this.props.id)
+    }
+
     render(){
         if(this.props.type==="Label"){
             return <div onClick={this.props.displayProperty} 
+            onMouseDown={this.dragItem}
             style={
                 {
                     fontSize:this.props.fontSize, 
@@ -20,7 +43,9 @@ class frameItem extends Component
             >{this.props.property}</div>;
         }
         else if(this.props.type==="Button"){
-        return (<div onClick={this.props.displayProperty}><button style={
+        return (<div onClick={this.props.displayProperty}
+            onMouseDown={this.dragItem}
+            ><button style={
             {
                 borderStyle:'solid',
                 textAlign:'center',
@@ -36,7 +61,9 @@ class frameItem extends Component
         }>{this.props.property}</button></div>)
         }
         else if(this.props.type==="Textfield"){
-            return (<div onClick={this.props.displayProperty}><input style={
+            return (<div onClick={this.props.displayProperty}
+                onMouseDown={this.dragItem}
+                ><input style={
                 {
                     borderStyle:'solid',
                     fontSize:this.props.fontSize, 
@@ -49,7 +76,7 @@ class frameItem extends Component
                     top:this.props.y+"px",
                     width:"200px"
                 }
-            } type="text"></input></div>)
+            }type="text"></input></div>)
         }
         else{
             return <div></div>

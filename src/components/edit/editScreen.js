@@ -137,6 +137,31 @@ class editScreen extends Component{
         firestore.collection('wireFrames').doc(this.props.id).update({panel:this.state.currentWireframe.panel})
     }
 
+    dragItem=(x, y, id)=>{
+        let itemDrag = null;
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id==id){
+                itemDrag=this.state.currentWireframe.panel.items[i];
+            }
+        }
+        if(itemDrag.type==="Label")
+        {
+            itemDrag.xCoord=x-document.getElementById("corner").getBoundingClientRect().x-24.3;
+            itemDrag.yCoord=y-document.getElementById("corner").getBoundingClientRect().y-18.75;
+        }
+        else if(itemDrag.type==="Button")
+        {
+            itemDrag.xCoord=x-document.getElementById("corner").getBoundingClientRect().x-32;
+            itemDrag.yCoord=y-document.getElementById("corner").getBoundingClientRect().y-10.625;
+        }
+        else if(itemDrag.type==="Textfield")
+        {
+            itemDrag.xCoord=x-document.getElementById("corner").getBoundingClientRect().x-102;
+            itemDrag.yCoord=y-document.getElementById("corner").getBoundingClientRect().y-24.5;
+        }
+        this.forceUpdate();
+    }
+
     render(){
         const frames = this.props.wireFramesLists
         const id = this.props.id
@@ -204,7 +229,7 @@ class editScreen extends Component{
                 <div class="col s7 card grey" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", background:""}}>
                     {(this.state.currentWireframe)?
                     <Panel frame={this.state.currentWireframe} displayProperty={this.displayProperty}
-                    addLabel={this.addLabel} addButton={this.addButton} addTextfield={this.addTextfield} parent={this}/>
+                    addLabel={this.addLabel} addButton={this.addButton} addTextfield={this.addTextfield} drag={this.dragItem}/>
                     :null}
                 </div>
                 <div class="col s3 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", position:"relative"}}>

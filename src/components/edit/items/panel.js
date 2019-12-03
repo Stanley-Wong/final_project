@@ -26,8 +26,6 @@ class panel extends Component{
     }
 
     render(){
-        console.log(this.props.frame)
-        console.log(this.props.parent)
         const backgroundStyle={background:this.state.color, height:(this.state.height)+'px', borderStyle:"solid", borderWidth:"1px"};
         const container={background:this.state.color, width:(this.state.width)+'px', height:(this.state.height)+'px', borderStyle:"solid", borderWidth:"1px"};
         return(
@@ -48,7 +46,8 @@ class panel extends Component{
                         displayProperty={this.props.displayProperty.bind(this,item)}
                         x={item.xCoord}
                         y={item.yCoord}
-
+                        dragging={this.props.drag}
+                        id={item.id}
                     /> 
                 ))}
             </div>
@@ -71,6 +70,8 @@ class panel extends Component{
                             displayProperty={this.props.displayProperty.bind(this,item)}
                             x={item.xCoord}
                             y={item.yCoord}
+                            dragging={this.props.drag}
+                            id={item.id}
                         /> 
                     ))}
                 </div>
