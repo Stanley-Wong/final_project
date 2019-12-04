@@ -7,26 +7,35 @@ import { Redirect } from 'react-router-dom';
 import { getFirestore } from 'redux-firestore';
 
 class home extends Component {
-    
+    state={
+        newLink:"",
+    }
+
     addNewWireFrame=()=>{
         var firestore = getFirestore();
-        firestore.collection('wireFrames').add(
-            {
-                name:"UNKNOWN",
-                owner:"UNKNOWN",
-                panel:{
-                    bColor:"rgb(255,255,255)",
-                    height:530,
-                    width:"none",
-                    items:[]
-                }
+        var newFrame = {
+            name:"UNKNOWN",
+            owner:"UNKNOWN",
+            timeStamp:new Date(),
+            panel:{
+                bColor:"rgb(255,255,255)",
+                height:530,
+                width:"none",
+                items:[],
             }
-        )
+        }
+        firestore.collection('wireFrames').add(newFrame).then(promise =>{
+            newFrame.id = promise.id;
+            this.setState({newLink:newFrame.id});
+        })
     }
 
     render() {
         if (!this.props.auth.uid) {
             return <Redirect to="/login" />;
+        }
+        if(this.state.newLink!=""){
+            return <Redirect to={"editscreen/"+this.state.newLink}/>
         }
         return (
             <div class="row">

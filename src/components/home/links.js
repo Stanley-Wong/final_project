@@ -19,10 +19,13 @@ class links extends React.Component {
             <div>
                 {
                 (this.props.wireFrames)?
-                this.props.wireFrames.map(wireframe=>{
+                this.props.wireFrames.sort(function(a,b){return a.timeStamp<b.timeStamp}).map(wireframe=>{
                     return (
                     <div>
-                        <Link to={"/editscreen/"+wireframe.id}>
+                        <Link to={"/editscreen/"+wireframe.id} onClick={()=>{
+                            var firestore=getFirestore();
+                            firestore.collection('wireFrames').doc(wireframe.id).update({"timeStamp": new Date()});
+                        }}>
                             <div class="row card" style={{paddingTop:"30px", paddingBottom:"30px", paddingLeft:"10px"}}>
                                 <h4 class="col s10"> {wireframe.name}</h4>
                                 <div class="material-icons col s2" style={{fontSize:"35px", color:"black"}} id={wireframe.id} onClick={this.delete}>close</div>

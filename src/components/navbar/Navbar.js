@@ -16,7 +16,7 @@ class Navbar extends React.Component {
       <nav className="white card">
         <div class="row" style={{paddingLeft:"30px"}}>
           <div class="col s9">
-            <Link to="/" style={{color:"black", fontSize:"35px"}}>Wireframer!</Link>
+            <div style={{color:"black", fontSize:"35px"}}>Wireframer!</div>
           </div>
           <div class="col s3">
           {links}

@@ -17,3 +17,32 @@ body {
   background-color: var(--swatch-foundation);
   font-family: 'Lexend Exa';
 }
+
+#popUp{
+  position:absolute;
+  top:30%;
+  left:0;
+  right:0;
+  margin:auto;
+  text-align:center;
+  font-size:20px;
+  width:300px;
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.1s;
+}
+
+#warning{
+  position:absolute;
+  top:30%;
+  left:0;
+  right:0;
+  margin:auto;
+  text-align:center;
+  font-size:20px;
+  width:400px;
+  height:200px;
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.3s;
+}

@@ -8,6 +8,7 @@ import Panel from './items/panel';
 import { Link } from 'react-router-dom';
 import frameItem from './items/frameItem';
 import labelImg from './label.png';
+import { watchFile } from 'fs';
 
 
 class editScreen extends Component{
@@ -25,8 +26,9 @@ class editScreen extends Component{
         bordercolor:"",
         borderT:"",
         borderR:"",
+        id:"",
         currentWireframe:"none",
-        idCounter:0
+        idCounter:0,
     }
 
     handleChange=(e)=>{
@@ -56,20 +58,17 @@ class editScreen extends Component{
     }
 
     displayProperty(item){
-        console.log("successfully passed")
-        console.log(item)
-        console.log(this)
         this.setState({itemProperty:item.property})
         this.setState({fontSize:item.fontSize})
         this.setState({background:item.background})
         this.setState({bordercolor:item.borderColor})
         this.setState({borderT:item.borderT})
         this.setState({borderR:item.borderR})
+        this.setState({id:item.id})
     }
 
-    addLabel=(x,y)=>{
-        console.log(x)
-        console.log(y)
+    addLabel=()=>{
+        console.log(document.getElementById("corner").getBoundingClientRect().x)
         let newLabel = {
             "type": "Label",
             "property":"label",
@@ -79,8 +78,8 @@ class editScreen extends Component{
             "borderT":'0px',
             "borderR":'0px',
             "id":this.state.idCounter,
-            "xCoord":x-document.getElementById("corner").getBoundingClientRect().x-24.3,
-            "yCoord":y-document.getElementById("corner").getBoundingClientRect().y-18.75
+            "xCoord":0,
+            "yCoord":0
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newLabel);
@@ -88,7 +87,7 @@ class editScreen extends Component{
         this.setState({idCounter:this.state.idCounter+1})
     }
 
-    addButton=(x,y)=>{
+    addButton=()=>{
         let newButton = {
             "type": "Button",
             "property":"Button",
@@ -98,8 +97,8 @@ class editScreen extends Component{
             "borderT":'2px',
             "borderR":'5px',
             "id":this.state.idCounter,
-            "xCoord":x-document.getElementById("corner").getBoundingClientRect().x-32,
-            "yCoord":y-document.getElementById("corner").getBoundingClientRect().y-10.625
+            "xCoord":0,
+            "yCoord":0
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newButton);
@@ -107,7 +106,7 @@ class editScreen extends Component{
         this.setState({idCounter:this.state.idCounter+1})
     }
 
-    addTextfield=(x,y)=>{
+    addTextfield=()=>{
         let newTextfield = {
             "type": "Textfield",
             "property":"Textfield",
@@ -117,8 +116,8 @@ class editScreen extends Component{
             "borderT":'2px',
             "borderR":'5px',
             "id":this.state.idCounter,
-            "xCoord":x-document.getElementById("corner").getBoundingClientRect().x-102,
-            "yCoord":y-document.getElementById("corner").getBoundingClientRect().y-24.5
+            "xCoord":0,
+            "yCoord":0
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newTextfield);
@@ -126,17 +125,28 @@ class editScreen extends Component{
         this.setState({idCounter:this.state.idCounter+1})
     }
 
+    //for testing purpose
     showStates=()=>{
         console.log(this.state.currentWireframe)
         console.log(this.state.idCounter)
+        console.log(this.state.itemProperty)
+        console.log(this.state.id)
     }
 
+    //When click save
     updateFrame=()=>{
         console.log("this runs")
         var firestore = getFirestore();
         firestore.collection('wireFrames').doc(this.props.id).update({panel:this.state.currentWireframe.panel})
+        document.getElementById("popUp").style.opacity=1;
+        document.getElementById("popUp").style.zIndex=3;
+        setTimeout((()=>{
+            document.getElementById("popUp").style.opacity=0
+            document.getElementById("popUp").style.zIndex=-1
+        }),1000);
     }
 
+    //when item is drag 
     dragItem=(x, y, id)=>{
         let itemDrag = null;
         for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
@@ -144,22 +154,94 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.type==="Label")
-        {
-            itemDrag.xCoord=x-document.getElementById("corner").getBoundingClientRect().x-24.3;
-            itemDrag.yCoord=y-document.getElementById("corner").getBoundingClientRect().y-18.75;
-        }
-        else if(itemDrag.type==="Button")
-        {
-            itemDrag.xCoord=x-document.getElementById("corner").getBoundingClientRect().x-32;
-            itemDrag.yCoord=y-document.getElementById("corner").getBoundingClientRect().y-10.625;
-        }
-        else if(itemDrag.type==="Textfield")
-        {
-            itemDrag.xCoord=x-document.getElementById("corner").getBoundingClientRect().x-102;
-            itemDrag.yCoord=y-document.getElementById("corner").getBoundingClientRect().y-24.5;
-        }
+        itemDrag.xCoord=itemDrag.xCoord+x;
+        itemDrag.yCoord=itemDrag.yCoord+y;
         this.forceUpdate();
+    }
+
+    //changing the item in edit screen. Five actions starts here
+    changeItemProperty=(e)=>{
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                this.state.currentWireframe.panel.items[i].property=e.target.value;
+            }
+        }
+        this.setState({itemProperty:e.target.value})
+    }
+
+    changeBackground=(e)=>{
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                this.state.currentWireframe.panel.items[i].background=e.target.value;
+            }
+        }
+        this.setState({background:e.target.value})
+    }
+
+    changeFontSize=(e)=>{
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                if(e.target.value!=""){
+                    this.state.currentWireframe.panel.items[i].fontSize=parseInt(e.target.value);
+                    this.setState({fontSize:parseInt(e.target.value)})
+                }
+                else{
+                    this.state.currentWireframe.panel.items[i].fontSize=0;
+                    this.setState({fontSize:0});
+                }
+            }
+        }
+    }
+
+    changeBorderColor=(e)=>{
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                this.state.currentWireframe.panel.items[i].borderColor=e.target.value;
+            }
+        }
+        this.setState({bordercolor:e.target.value})
+    }
+
+    changeBorderT=(e)=>{
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                if(e.target.value!=""){
+                    this.state.currentWireframe.panel.items[i].borderT=e.target.value+'px';
+                    this.setState({borderT:(e.target.value+'px')})
+                }
+                else{
+                    this.state.currentWireframe.panel.items[i].borderT='0px';
+                    this.setState({borderT:'0px'});
+                }
+            }
+        }
+    }
+
+    changeBorderR=(e)=>{
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                if(e.target.value!=""){
+                    this.state.currentWireframe.panel.items[i].borderR=e.target.value+'px';
+                    this.setState({borderR:(e.target.value+'px')})
+                }
+                else{
+                    this.state.currentWireframe.panel.items[i].borderR='0px';
+                    this.setState({borderR:'0px'});
+                }
+            }
+        }
+    }
+    //end of changing items
+
+    //this is for popup window for closing
+    warnUnsave=()=>{
+        document.getElementById("warning").style.opacity=1;
+        document.getElementById("warning").style.zIndex=3;
+    }
+
+    closeWarning=()=>{
+        document.getElementById("warning").style.opacity=0;
+        document.getElementById("warning").style.zIndex=-1;
     }
 
     render(){
@@ -189,37 +271,35 @@ class editScreen extends Component{
                         <i class="material-icons col s2">zoom_in</i>
                         <i class="material-icons col s2">zoom_out</i>
                         <div onClick={this.updateFrame} class="col s3">Save</div>
-                        <div class="col s3">Close</div>
+                        <div onClick={this.warnUnsave} class="col s3">Close</div>
                     </div>
                     <div style={{padding:"5px", height:"118px"}}>
                         <div class="card z-depth-0">
                             <div class="card" style={{borderStyle:"solid", borderWidth:"2px", height:"70px"}}
-                            id="container" draggable onDragStart={(e) => this.onDrag(e)}></div>
+                            id="container"></div>
                             <div style={{textAlign:"center"}}>Container</div>
                         </div>
                     </div>
                     <div>&nbsp;</div>
                     <div>&nbsp;</div>
                     <div style={{padding:"5px", height:"118px"}}>
-                        <div class="card z-depth-0">
-                            <div class="card z-depth-0" style={{textAlign:"center"}}
-                            id="label" draggable onDragStart={(e) => this.onDrag(e)}>Prompt for Input:</div>
+                        <div class="card z-depth-0" onClick={this.addLabel}>
+                            <div class="card z-depth-0" style={{textAlign:"center"}} id="label">Prompt for Input:</div>
                             <div style={{textAlign:"center"}}>Label</div>
                         </div>
                     </div>
                     <div style={{padding:"5px", height:"118px", display:"inline-block"}}>
-                        <div class="card z-depth-0">
+                        <div class="card z-depth-0" onClick={this.addButton}>
                             <div class="card z-depth-0"
-                            id="button" draggable onDragStart={(e) => this.onDrag(e)}>
+                            id="button">
                                 <div style={{borderStyle:"solid", borderWidth:"2px", textAlign:"center", borderRadius:"5px", color:"grey"}}>Submit</div>
                             </div>
                             <div style={{textAlign:"center"}}>Button</div>
                         </div>
                     </div>
                     <div style={{padding:"5px", height:"118px", display:"inline"}}>
-                        <div class="card z-depth-0">
-                            <div class="card z-depth-0"
-                            draggable onDragStart={(e) => this.onDrag(e)} id="textfield">
+                        <div class="card z-depth-0" onClick={this.addTextfield}>
+                            <div class="card z-depth-0" id="textfield">
                                 <div style={{border: "solid",borderRadius: "5px",borderWidth: "2px",paddingLeft: "10px", color:"grey", textAlign:"left"}}>Input</div>
                             </div>
                             <div style={{textAlign:"center"}}>Textfield</div>
@@ -228,36 +308,58 @@ class editScreen extends Component{
                 </div>
                 <div class="col s7 card grey" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", background:""}}>
                     {(this.state.currentWireframe)?
-                    <Panel frame={this.state.currentWireframe} displayProperty={this.displayProperty}
-                    addLabel={this.addLabel} addButton={this.addButton} addTextfield={this.addTextfield} drag={this.dragItem}/>
+                    <Panel frame={this.state.currentWireframe} displayProperty={this.displayProperty} drag={this.dragItem}/>
                     :null}
                 </div>
                 <div class="col s3 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", position:"relative"}}>
                     <div>Properties</div>
-                    <input value={this.state.itemProperty}></input>
+                    <input value={this.state.itemProperty} onChange={this.changeItemProperty}></input>
                     <div class="card" style={{height:"60px"}}>
                         <span>FontSize:</span>
-                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.fontSize}></input>
+                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"10px"}} 
+                        value={this.state.fontSize}
+                        onChange={this.changeFontSize}
+                        ></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
                         <span>Background:</span>
-                        <input style={{display:"inline-block", width:"40%" , position:"absolute", right:"30px"}} value={this.state.background}></input>
+                        <input style={{display:"inline-block", width:"40%" , position:"absolute", right:"10px"}} 
+                        value={this.state.background}
+                        onChange={this.changeBackground}
+                        type="color"></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
                         <span>Border Color:</span>
-                        <input style={{display:"inline-block", width:"40%" , position:"absolute", right:"30px"}} value={this.state.bordercolor}></input>
+                        <input style={{display:"inline-block", width:"40%" , position:"absolute", right:"10px"}} 
+                        value={this.state.bordercolor}
+                        onChange={this.changeBorderColor}
+                        type="color"></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
                         <span>Border Thickness:</span>
-                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.borderT.slice(0,this.state.borderT.length-2)}></input>
+                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"10px"}} 
+                        value={this.state.borderT.slice(0,this.state.borderT.length-2)}
+                        onChange={this.changeBorderT}></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
                         <span>Border Radius:</span>
-                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"30px"}} value={this.state.borderR.slice(0,this.state.borderR.length-2)}></input>
+                        <input style={{display:"inline-block", width:"40%", position:"absolute", right:"10px"}} 
+                        value={this.state.borderR.slice(0,this.state.borderR.length-2)}
+                        onChange={this.changeBorderR}></input>
                     </div>
-                    <button>Submit Change</button>
                 </div>
             </div>):null}
+            <div id="popUp" class="card blue">Your wireframer has been saved!</div>
+            <div id="warning" class="card blue">
+                <div>Are you sure you want to close the window?</div>
+                <div>&nbsp;</div>
+                <div>Any unsave work will be lost</div>
+                <div>&nbsp;</div>
+                <Link to="/">
+                    <button>Yes</button>
+                </Link>
+                <button onClick={this.closeWarning}>No</button>
+            </div>
             <button onClick={this.showStates}>click to show state</button>
             </div>
         )

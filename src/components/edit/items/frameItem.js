@@ -4,18 +4,21 @@ import Panel from "./panel"
 
 class frameItem extends Component
 {
-
+    state={
+        origX:0,
+        origY:0
+    }
 
     dragItem=(e)=>{
         e.preventDefault();
+        this.setState({origX:e.clientX})
+        this.setState({origY:e.clientY})
         console.log("dragging")
         document.onmousemove = this.dragging;
         document.onmouseup = this.moveItem;
     }
 
     moveItem(e){
-        console.log(e.clientX)
-        console.log(e.clientY)
         console.log("x moved by:"+e.clientX)
         console.log("y moved by"+e.clientY)
         document.onmouseup = null;
@@ -23,7 +26,9 @@ class frameItem extends Component
     }
 
     dragging=(e)=>{
-        this.props.dragging.call(this, e.clientX, e.clientY, this.props.id)
+        this.props.dragging.call(this, e.clientX-this.state.origX, e.clientY-this.state.origY, this.props.id)
+        this.setState({origX:e.clientX})
+        this.setState({origY:e.clientY})
     }
 
     render(){
