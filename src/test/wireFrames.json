@@ -6,7 +6,7 @@
             "panel":{
                 "bColor":"rgb(255,255,255)",
                 "height":530,
-                "width":"none",
+                "itemCount":13,
                 "items":[
                     {
                         "background":"rgb(0,255,0)",

@@ -31,6 +31,9 @@ class frameItem extends Component
         this.setState({origY:e.clientY})
     }
 
+    
+    
+
     render(){
         console.log(this.props.fontSize)
         if(this.props.type==="Label"){

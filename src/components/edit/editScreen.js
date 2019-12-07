@@ -7,8 +7,6 @@ import { getFirestore } from 'redux-firestore';
 import Panel from './items/panel';
 import { Link } from 'react-router-dom';
 import frameItem from './items/frameItem';
-import labelImg from './label.png';
-import { watchFile } from 'fs';
 
 
 class editScreen extends Component{
@@ -17,6 +15,11 @@ class editScreen extends Component{
         super(props)
         this.displayProperty = this.displayProperty.bind(this)
     }
+
+    componentWillUnmount(){
+        document.removeEventListener("keydown", this.handleKeyDown)
+    }
+
     state={
         name: "",
         owner: "",
@@ -28,7 +31,7 @@ class editScreen extends Component{
         borderR:"",
         id:"",
         currentWireframe:"none",
-        idCounter:0,
+        idCounter:"",
     }
 
     handleChange=(e)=>{
@@ -57,8 +60,9 @@ class editScreen extends Component{
         e.dataTransfer.setData("text", e.target.id)
     }
 
-    displayProperty(item){
-        console.log(item)
+    displayProperty(item,e){
+        document.addEventListener("keydown", this.handleKeyDown)
+        e.stopPropagation();
         this.setState({itemProperty:item.property})
         this.setState({fontSize:item.fontSize})
         this.setState({background:item.background})
@@ -68,8 +72,19 @@ class editScreen extends Component{
         this.setState({id:item.id})
     }
 
+    removeDisplayProperty=()=>{
+        document.removeEventListener("keydown", this.handleKeyDown)
+        this.setState({itemProperty:""})
+        this.setState({fontSize:""})
+        this.setState({background:""})
+        this.setState({bordercolor:""})
+        this.setState({borderT:""})
+        this.setState({borderR:""})
+        this.setState({id:""})
+    }
+
     addLabel=()=>{
-        console.log(document.getElementById("corner").getBoundingClientRect().x)
+        console.log(this.state.currentWireframe)
         let newLabel = {
             "type": "Label",
             "property":"label",
@@ -78,12 +93,13 @@ class editScreen extends Component{
             "borderColor":"black",
             "borderT":'0px',
             "borderR":'0px',
-            "id":this.state.idCounter,
+            "id":this.state.currentWireframe.panel.itemCount+1,
             "xCoord":0,
             "yCoord":0
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newLabel);
+        tempFrame.panel.itemCount=tempFrame.panel.itemCount+1;
         this.setState({currentWireframe:tempFrame});
         this.setState({idCounter:this.state.idCounter+1})
     }
@@ -97,12 +113,13 @@ class editScreen extends Component{
             "borderColor":"black",
             "borderT":'2px',
             "borderR":'5px',
-            "id":this.state.idCounter,
+            "id":this.state.currentWireframe.panel.itemCount+1,
             "xCoord":0,
             "yCoord":0
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newButton);
+        tempFrame.panel.itemCount=tempFrame.panel.itemCount+1;
         this.setState({currentWireframe:tempFrame});
         this.setState({idCounter:this.state.idCounter+1})
     }
@@ -116,12 +133,13 @@ class editScreen extends Component{
             "borderColor":"black",
             "borderT":'2px',
             "borderR":'5px',
-            "id":this.state.idCounter,
+            "id":this.state.currentWireframe.panel.itemCount+1,
             "xCoord":0,
             "yCoord":0
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newTextfield);
+        tempFrame.panel.itemCount=tempFrame.panel.itemCount+1;
         this.setState({currentWireframe:tempFrame});
         this.setState({idCounter:this.state.idCounter+1})
     }
@@ -129,9 +147,8 @@ class editScreen extends Component{
     //for testing purpose
     showStates=()=>{
         console.log(this.state.currentWireframe)
-        console.log(this.state.idCounter)
+        console.log(this.state.currentWireframe.panel.itemCount)
         console.log(this.state.itemProperty)
-        console.log(this.state.id)
     }
 
     //When click save
@@ -162,6 +179,7 @@ class editScreen extends Component{
 
     //changing the item in edit screen. Five actions starts here
     changeItemProperty=(e)=>{
+        e.stopPropagation();
         for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
             if(this.state.currentWireframe.panel.items[i].id===this.state.id){
                 this.state.currentWireframe.panel.items[i].property=e.target.value;
@@ -245,6 +263,33 @@ class editScreen extends Component{
         document.getElementById("warning").style.zIndex=-1;
     }
 
+    deleteItem(){
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                this.state.currentWireframe.panel.items.splice(i,1);
+            }
+        }
+        this.removeDisplayProperty();
+    }
+
+    handleKeyDown = (e) =>{
+        if(e.keyCode===8){
+            e.preventDefault();
+            console.log("backspace clicked")
+            this.deleteItem();
+        }
+    }
+
+    //for overriding delete key when typing
+    removeDelete=()=>{
+        document.removeEventListener("keydown", this.handleKeyDown);
+    }
+
+    addRemove=()=>{
+        document.addEventListener("keydown", this.handleKeyDown);
+    }
+    //for overriding delete key when typing
+
     render(){
         const frames = this.props.wireFramesLists
         const id = this.props.id
@@ -309,17 +354,25 @@ class editScreen extends Component{
                 </div>
                 <div class="col s7 card grey" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", background:""}}>
                     {(this.state.currentWireframe)?
-                    <Panel frame={this.state.currentWireframe} displayProperty={this.displayProperty} drag={this.dragItem}/>
+                    <Panel frame={this.state.currentWireframe} 
+                    displayProperty={this.displayProperty} 
+                    drag={this.dragItem}
+                    removeDisplayProperty={this.removeDisplayProperty}/>
                     :null}
                 </div>
                 <div class="col s3 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", position:"relative"}}>
                     <div>Properties</div>
-                    <input value={this.state.itemProperty} onChange={this.changeItemProperty}></input>
+                    <input value={this.state.itemProperty} 
+                    onChange={this.changeItemProperty}
+                    onFocus={this.removeDelete}
+                    onBlur={this.addRemove.bind(this)}/>
                     <div class="card" style={{height:"60px"}}>
                         <span>FontSize:</span>
                         <input style={{display:"inline-block", width:"40%", position:"absolute", right:"10px"}} 
                         value={this.state.fontSize}
                         onChange={this.changeFontSize}
+                        onFocus={this.removeDelete}
+                        onBlur={this.addRemove.bind(this)}
                         ></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
@@ -340,13 +393,17 @@ class editScreen extends Component{
                         <span>Border Thickness:</span>
                         <input style={{display:"inline-block", width:"40%", position:"absolute", right:"10px"}} 
                         value={this.state.borderT.slice(0,this.state.borderT.length-2)}
-                        onChange={this.changeBorderT}></input>
+                        onChange={this.changeBorderT}
+                        onFocus={this.removeDelete}
+                        onBlur={this.addRemove.bind(this)}></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
                         <span>Border Radius:</span>
                         <input style={{display:"inline-block", width:"40%", position:"absolute", right:"10px"}} 
                         value={this.state.borderR.slice(0,this.state.borderR.length-2)}
-                        onChange={this.changeBorderR}></input>
+                        onChange={this.changeBorderR}
+                        onFocus={this.removeDelete}
+                        onBlur={this.addRemove.bind(this)}></input>
                     </div>
                 </div>
             </div>):null}
