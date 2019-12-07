@@ -58,6 +58,7 @@ class editScreen extends Component{
     }
 
     displayProperty(item){
+        console.log(item)
         this.setState({itemProperty:item.property})
         this.setState({fontSize:item.fontSize})
         this.setState({background:item.background})

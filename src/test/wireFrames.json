@@ -1,123 +1,183 @@
 {
     "wireFrames": [
         {
-            "name": "Frame A",
-            "owner": "person A",
-            "panel": {
-                "bColor": "rgb(255,255,255)",
-                "size":300,
-                "items": [
-                    {
-                        "type": "Label",
-                        "x":0,
-                        "y":0,
-                        "property":"Person A WireFrame",
-                        "fontSize":25,
-                        "background":"rgb(255,255,255)",
-                        "borderColor":"rgb(0,0,0)",
-                        "borderT":1,
-                        "borderR":1
-                    },
-                    {
-                        "type": "textfield",
-                        "x":0,
-                        "y":20,
-                        "property":"input A",
-                        "fontSize":15,
-                        "background":"rgb(255,255,255)",
-                        "borderColor":"rgb(0,0,0)",
-                        "borderT":1,
-                        "borderR":1
-                    },
-                    {
-                        "type": "textfield",
-                        "x":0,
-                        "y":40,
-                        "property":"input B",
-                        "fontSize":15,
-                        "background":"rgb(255,255,255)",
-                        "borderColor":"rgb(0,0,0)",
-                        "borderT":1,
-                        "borderR":1
-                    },
-                    {
-                        "type": "button",
-                        "x":0,
-                        "y":60,
-                        "property":"Button A",
-                        "fontSize":15,
-                        "background":"rgb(255,255,255)",
-                        "borderColor":"rgb(0,0,0)",
-                        "borderT":1,
-                        "borderR":1
-                    }
-                ]
-            }
-        },
-        {
-            "name": "Form",
-            "owner": "person B",
-            "panel": {
-                "bColor": "rgb(255,255,255)",
-                "size":400,
+            "name":"List",
+            "owner":"Person B",
+            "panel":{
+                "bColor":"rgb(255,255,255)",
+                "height":530,
+                "width":"none",
                 "items":[
                     {
-                        "type": "textfield",
-                        "x":0,
-                        "y":0,
-                        "property":"name 1",
-                        "fontSize":15,
-                        "background":"rgb(255,255,255)",
-                        "borderColor":"rgb(0,0,0)",
-                        "borderT":1,
-                        "borderR":1
+                        "background":"rgb(0,255,0)",
+                        "borderColor":"black",
+                        "borderR":"0px",
+                        "borderT":"0px",
+                        "fontSize":"35",
+                        "id":0,
+                        "property":"Form",
+                        "type":"Label",
+                        "xCoord":15,
+                        "yCoord":7
                     },
                     {
-                        "type": "textfield",
-                        "x":20,
-                        "y":0,
-                        "property":"email 1",
-                        "fontSize":15,
-                        "background":"rgb(255,255,255)",
-                        "borderColor":"rgb(0,0,0)",
-                        "borderT":1,
-                        "borderR":1
+                        "background":"#00ffff",
+                        "borderColor":"#000000",
+                        "borderR":"0px",
+                        "borderT":"0px",
+                        "fontSize":"25",
+                        "id":1,
+                        "property":"Name 1",
+                        "type":"Label",
+                        "xCoord":25,
+                        "yCoord":75
                     },
                     {
-                        "type": "textfield",
-                        "x":0,
-                        "y":20,
-                        "property":"name 2",
-                        "fontSize":15,
                         "background":"rgb(255,255,255)",
-                        "borderColor":"rgb(0,0,0)",
-                        "borderT":1,
-                        "borderR":1
+                        "borderColor":"black",
+                        "borderR":"5px",
+                        "borderT":"2px",
+                        "fontSize":"15",
+                        "id":8,
+                        "property":"",
+                        "type":"Textfield",
+                        "xCoord":110,
+                        "yCoord":70
                     },
                     {
-                        "type": "textfield",
-                        "x":20,
-                        "y":20,
-                        "property":"email 2",
-                        "fontSize":15,
-                        "background":"rgb(255,255,255)",
-                        "borderColor":"rgb(0,0,0)",
-                        "borderT":1,
-                        "borderR":1
+                        "background":"#00ffff",
+                        "borderColor":"#000000",
+                        "borderR":"0px",
+                        "borderT":"0px",
+                        "fontSize":"25",
+                        "id":2,
+                        "property":"Email",
+                        "type":"Label",
+                        "xCoord":325,
+                        "yCoord":75
                     },
                     {
-                        "type": "button",
-                        "x":10,
-                        "y":40,
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"black",
+                        "borderR":"5px",
+                        "borderT":"2px",
+                        "fontSize":"15",
+                        "id":11,
+                        "property":"",
+                        "type":"Textfield",
+                        "xCoord":390,
+                        "yCoord":70
+                    },
+                    {
+                        "background":"#00ffff",
+                        "borderColor":"#000000",
+                        "borderR":"0px",
+                        "borderT":"0px",
+                        "fontSize":"25",
+                        "id":3,
+                        "property":"Name 2",
+                        "type":"Label",
+                        "xCoord":25,
+                        "yCoord":215
+                    },
+                    {
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"black",
+                        "borderR":"5px",
+                        "borderT":"2px",
+                        "fontSize":"15",
+                        "id":9,
+                        "property":"",
+                        "type":"Textfield",
+                        "xCoord":110,
+                        "yCoord":210
+                    },
+                    {
+                        "background":"#00ffff",
+                        "borderColor":"#000000",
+                        "borderR":"0px",
+                        "borderT":"0px",
+                        "fontSize":"25",
+                        "id":4,
+                        "property":"Email",
+                        "type":"Label",
+                        "xCoord":325,
+                        "yCoord":215
+                    },
+                    {
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"black",
+                        "borderR":"5px",
+                        "borderT":"2px",
+                        "fontSize":"15",
+                        "id":12,
+                        "property":"",
+                        "type":"Textfield",
+                        "xCoord":390,
+                        "yCoord":210
+                    },
+                    {
+                        "background":"#00ffff",
+                        "borderColor":"#000000",
+                        "borderR":"0px",
+                        "borderT":"0px",
+                        "fontSize":"25",
+                        "id":5,
+                        "property":"Name 3",
+                        "type":"Label",
+                        "xCoord":25,
+                        "yCoord":355
+                    },
+                    {
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"black",
+                        "borderR":"5px",
+                        "borderT":"2px",
+                        "fontSize":"15",
+                        "id":10,
+                        "property":"",
+                        "type":"Textfield",
+                        "xCoord":110,
+                        "yCoord":350
+                    },
+                    {
+                        "background":"#00ffff",
+                        "borderColor":"#000000",
+                        "borderR":"0px",
+                        "borderT":"0px",
+                        "fontSize":"25",
+                        "id":6,
+                        "property":"Email",
+                        "type":"Label",
+                        "xCoord":325,
+                        "yCoord":355
+                    },
+                    {
+                        "background":"rgb(255,255,255)",
+                        "borderColor":"black",
+                        "borderR":"5px",
+                        "borderT":"2px",
+                        "fontSize":"15",
+                        "id":13,
+                        "property":"",
+                        "type":"Textfield",
+                        "xCoord":390,
+                        "yCoord":350
+                    },
+                    {
+                        "background":"#00ffff",
+                        "borderColor":"#000000",
+                        "borderR":"5px",
+                        "borderT":"2px",
+                        "fontSize":"25",
+                        "id":7,
                         "property":"Submit",
-                        "fontSize":15,
-                        "background":"rgb(255,255,255)",
-                        "borderColor":"rgb(0,0,0)",
-                        "borderT":1,
-                        "borderR":1
+                        "type":"Button",
+                        "xCoord":525,
+                        "yCoord":485
                     }
                 ]
             }
-        }   
+        }
     ]
 }

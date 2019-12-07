@@ -32,12 +32,13 @@ class frameItem extends Component
     }
 
     render(){
+        console.log(this.props.fontSize)
         if(this.props.type==="Label"){
             return <div onClick={this.props.displayProperty} 
             onMouseDown={this.dragItem}
             style={
                 {
-                    fontSize:this.props.fontSize, 
+                    fontSize:this.props.fontSize+"px", 
                     background:this.props.background, 
                     display:"inline-block",
                     position:"absolute",

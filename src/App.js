@@ -18,7 +18,7 @@ class App extends Component {
     if (auth.isLoaded) {
       return (
         <BrowserRouter>
-          <div className="App">
+          <div className="App" style={{width:"1100px", height:"1100px", margin:"auto"}}>
             <Navbar />
             <Switch>
               <Route path="/home" component={HomeScreen} />
