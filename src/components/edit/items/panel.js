@@ -20,18 +20,9 @@ class panel extends Component{
             >
                 {this.state.items.map(item=>(
                         <FrameItem 
-                        type={item.type}
-                        property={item.property}
-                        fontSize={item.fontSize}
-                        background={item.background}
-                        borderColor={item.borderColor}
-                        borderT={item.borderT}
-                        borderR={item.borderR}
+                        item={item}
                         displayProperty={this.props.displayProperty.bind(this,item)}
-                        x={item.xCoord}
-                        y={item.yCoord}
                         dragging={this.props.drag}
-                        id={item.id}
                     /> 
                 ))}
             </div>

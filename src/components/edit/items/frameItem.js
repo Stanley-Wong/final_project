@@ -6,7 +6,7 @@ class frameItem extends Component
 {
     state={
         origX:0,
-        origY:0
+        origY:0,
     }
 
     dragItem=(e)=>{
@@ -26,69 +26,98 @@ class frameItem extends Component
     }
 
     dragging=(e)=>{
-        this.props.dragging.call(this, e.clientX-this.state.origX, e.clientY-this.state.origY, this.props.id)
+        this.props.dragging.call(this, e.clientX-this.state.origX, e.clientY-this.state.origY, this.props.item.id)
         this.setState({origX:e.clientX})
         this.setState({origY:e.clientY})
     }
 
-    
-    
 
     render(){
-        console.log(this.props.fontSize)
-        if(this.props.type==="Label"){
-            return <div onClick={this.props.displayProperty} 
+        let item = this.props.item;
+        let show={
+            position:"absolute",
+            left:item.xCoord+"px",
+            top:item.yCoord+"px",
+            border:"1px solid",
+            background:"rgba(255,255,255,0)"
+        }
+        let noShow={
+            position:"absolute",
+            left:item.xCoord+"px",
+            top:item.yCoord+"px",
+            background:"rgba(255,255,255,0)",
+        }
+        console.log(item.fontSize)
+        if(item.type==="Label"){
+            return <div 
+            style={(item.showSelect)?show:noShow}
+            ><div 
+            onClick={this.props.displayProperty} 
             onMouseDown={this.dragItem}
             style={
                 {
-                    fontSize:this.props.fontSize+"px", 
-                    background:this.props.background, 
+                    fontSize:item.fontSize+"px", 
+                    background:item.background, 
                     display:"inline-block",
-                    position:"absolute",
-                    left:this.props.x+"px",
-                    top:this.props.y+"px"
+                    margin:"5px",
                 }
             }
-            >{this.props.property}</div>;
+            >{item.property}</div></div>;
         }
-        else if(this.props.type==="Button"){
-        return (<div onClick={this.props.displayProperty}
+        else if(item.type==="Button"){
+        return (<div onClick={this.props.displayProperty} 
             onMouseDown={this.dragItem}
+            style={(item.showSelect)?show:noShow}
             ><button style={
             {
                 borderStyle:'solid',
                 textAlign:'center',
-                fontSize:this.props.fontSize, 
-                background:this.props.background,
-                borderWidth:this.props.borderT,
-                borderColor:this.props.borderColor,
-                borderRadius:this.props.borderR,
-                position:"absolute",
-                left:this.props.x+"px",
-                top:this.props.y+"px"
+                fontSize:item.fontSize, 
+                background:item.background,
+                borderWidth:item.borderT,
+                borderColor:item.borderColor,
+                borderRadius:item.borderR,
+                margin:"5px"
             }
-        }>{this.props.property}</button></div>)
+        }>{item.property}</button></div>)
         }
-        else if(this.props.type==="Textfield"){
-            return (<div onClick={this.props.displayProperty}
+        else if(item.type==="Textfield"){
+            return (<div onClick={this.props.displayProperty} 
                 onMouseDown={this.dragItem}
+                style={(item.showSelect)?show:noShow}
                 ><input style={
                 {
                     borderStyle:'solid',
-                    fontSize:this.props.fontSize, 
-                    background:this.props.background,
-                    borderWidth:this.props.borderT,
-                    borderColor:this.props.borderColor,
-                    borderRadius:this.props.borderR,
-                    position:"absolute",
-                    left:this.props.x+"px",
-                    top:this.props.y+"px",
-                    width:"200px"
+                    fontSize:item.fontSize, 
+                    background:item.background,
+                    borderWidth:item.borderT,
+                    borderColor:item.borderColor,
+                    borderRadius:item.borderR,
+                    width:"200px",
+                    margin:"5px"
                 }
             }type="text"></input></div>)
         }
-        else{
-            return <div></div>
+        else if(item.type==="Container"){
+            return <div
+            style={(item.showSelect)?show:noShow}
+            ><div class="card" onClick={this.props.displayProperty} 
+            onMouseDown={this.dragItem}
+            style={
+                {
+                    borderStyle:"solid",
+                    fontSize:item.fontSize+"px", 
+                    background:item.background, 
+                    display:"inline-block",
+                    height:item.height+"px",
+                    width:item.width+"px",
+                    borderWidth:item.borderT,
+                    borderColor:item.borderColor,
+                    borderRadius:item.borderR,
+                    margin:"5px"
+                }}
+            >
+            </div></div>
         }
     }
 }

@@ -31,7 +31,6 @@ class editScreen extends Component{
         borderR:"",
         id:"",
         currentWireframe:"none",
-        idCounter:"",
     }
 
     handleChange=(e)=>{
@@ -39,21 +38,6 @@ class editScreen extends Component{
         this.setState({[target.id]: target.value});
         var firestore = getFirestore();
         firestore.collection('wireFrames').doc(this.props.id).update({[target.id]: target.value});
-    }
-
-    addContainer=()=>{
-        console.log("add Panel")
-        var firestore = getFirestore();
-        firestore.collection('wireFrames').doc(this.props.id).update(
-            {
-                "panel":{
-                    bColor: "rgb(255,255,255)",
-                    size:300,
-                    items:[]
-                }
-            }
-        );
-        this.setState({idCounter:this.state.idCounter+1})
     }
 
     onDrag=(e)=>{
@@ -70,10 +54,22 @@ class editScreen extends Component{
         this.setState({borderT:item.borderT})
         this.setState({borderR:item.borderR})
         this.setState({id:item.id})
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id==item.id){
+                this.state.currentWireframe.panel.items[i].showSelect=true;
+                break;
+            }
+        }
     }
 
     removeDisplayProperty=()=>{
         document.removeEventListener("keydown", this.handleKeyDown)
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id==this.state.id){
+                this.state.currentWireframe.panel.items[i].showSelect=false;
+                break;
+            }
+        }
         this.setState({itemProperty:""})
         this.setState({fontSize:""})
         this.setState({background:""})
@@ -81,6 +77,29 @@ class editScreen extends Component{
         this.setState({borderT:""})
         this.setState({borderR:""})
         this.setState({id:""})
+    }
+
+    addContainer=()=>{
+        console.log(this.state.currentWireframe)
+        let newLabel = {
+            "type": "Container",
+            "property":"container",
+            "fontSize":25,
+            "background":"rgb(255,255,255)",
+            "borderColor":"black",
+            "borderT":'2px',
+            "borderR":'2px',
+            "id":this.state.currentWireframe.panel.itemCount+1,
+            "xCoord":0,
+            "yCoord":0,
+            "height":300,
+            "width":300,
+            "showSelect":false
+        }
+        let tempFrame = this.state.currentWireframe;
+        tempFrame.panel.items.push(newLabel);
+        tempFrame.panel.itemCount=tempFrame.panel.itemCount+1;
+        this.setState({currentWireframe:tempFrame});
     }
 
     addLabel=()=>{
@@ -95,13 +114,13 @@ class editScreen extends Component{
             "borderR":'0px',
             "id":this.state.currentWireframe.panel.itemCount+1,
             "xCoord":0,
-            "yCoord":0
+            "yCoord":0,
+            "showSelect":false
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newLabel);
         tempFrame.panel.itemCount=tempFrame.panel.itemCount+1;
         this.setState({currentWireframe:tempFrame});
-        this.setState({idCounter:this.state.idCounter+1})
     }
 
     addButton=()=>{
@@ -115,13 +134,13 @@ class editScreen extends Component{
             "borderR":'5px',
             "id":this.state.currentWireframe.panel.itemCount+1,
             "xCoord":0,
-            "yCoord":0
+            "yCoord":0,
+            "showSelect":false
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newButton);
         tempFrame.panel.itemCount=tempFrame.panel.itemCount+1;
         this.setState({currentWireframe:tempFrame});
-        this.setState({idCounter:this.state.idCounter+1})
     }
 
     addTextfield=()=>{
@@ -135,7 +154,8 @@ class editScreen extends Component{
             "borderR":'5px',
             "id":this.state.currentWireframe.panel.itemCount+1,
             "xCoord":0,
-            "yCoord":0
+            "yCoord":0,
+            "showSelect":false
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newTextfield);
@@ -272,12 +292,35 @@ class editScreen extends Component{
         this.removeDisplayProperty();
     }
 
+    copyItem(){
+        let tempList = this.state.currentWireframe;
+        let temp = null;
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                temp = JSON.parse(JSON.stringify(this.state.currentWireframe.panel.items[i]));
+                temp.id=parseInt(tempList.panel.itemCount)+1;
+                temp.xCoord=temp.xCoord+100;
+                temp.yCoord=temp.yCoord+100;
+                break;
+            }
+        }
+        tempList.panel.items.push(temp);
+        tempList.panel.itemCount=tempList.panel.itemCount+1;
+        this.setState({currentWireframe:tempList})
+    }
+
     handleKeyDown = (e) =>{
         if(e.keyCode===8){
             e.preventDefault();
             console.log("backspace clicked")
             this.deleteItem();
         }
+        if(e.keyCode===68 && e.ctrlKey){
+            e.preventDefault();
+            console.log("Copy")
+            this.copyItem();
+        }
+        console.log(e.ctrlKey)
     }
 
     //for overriding delete key when typing
@@ -320,7 +363,7 @@ class editScreen extends Component{
                         <div onClick={this.warnUnsave} class="col s3">Close</div>
                     </div>
                     <div style={{padding:"5px", height:"118px"}}>
-                        <div class="card z-depth-0">
+                        <div class="card z-depth-0" onClick={this.addContainer}>
                             <div class="card" style={{borderStyle:"solid", borderWidth:"2px", height:"70px"}}
                             id="container"></div>
                             <div style={{textAlign:"center"}}>Container</div>
