@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Panel from "./panel"
+import { placeholder } from '@babel/types';
 
 
 class frameItem extends Component
@@ -51,24 +52,37 @@ class frameItem extends Component
         if(item.type==="Label"){
             return <div 
             style={(item.showSelect)?show:noShow}
-            ><div 
+            >
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", top:"-18px",right:"-3px",position:"absolute"}}></p>):null}
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", top:"-18px",left:"-3px",position:"absolute"}}></p>):null}
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", bottom:"-18px",left:"-3px",position:"absolute"}}></p>):null}
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", bottom:"-18px",right:"-3px",position:"absolute"}}></p>):null}
+            <div 
             onClick={this.props.displayProperty} 
             onMouseDown={this.dragItem}
+            bounds='parent'
             style={
                 {
                     fontSize:item.fontSize+"px", 
                     background:item.background, 
                     display:"inline-block",
                     margin:"5px",
+                    color:item.textColor
                 }
             }
-            >{item.property}</div></div>;
+            >{item.property}</div>
+            </div>;
         }
         else if(item.type==="Button"){
         return (<div onClick={this.props.displayProperty} 
             onMouseDown={this.dragItem}
             style={(item.showSelect)?show:noShow}
-            ><button style={
+            >
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", top:"-18px",right:"-3px",position:"absolute"}}></p>):null}
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", top:"-18px",left:"-3px",position:"absolute"}}></p>):null}
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", bottom:"-18px",left:"-3px",position:"absolute"}}></p>):null}
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", bottom:"-18px",right:"-3px",position:"absolute"}}></p>):null}    
+            <button style={
             {
                 borderStyle:'solid',
                 textAlign:'center',
@@ -77,7 +91,8 @@ class frameItem extends Component
                 borderWidth:item.borderT,
                 borderColor:item.borderColor,
                 borderRadius:item.borderR,
-                margin:"5px"
+                margin:"5px",
+                color:item.textColor
             }
         }>{item.property}</button></div>)
         }
@@ -85,7 +100,12 @@ class frameItem extends Component
             return (<div onClick={this.props.displayProperty} 
                 onMouseDown={this.dragItem}
                 style={(item.showSelect)?show:noShow}
-                ><input style={
+                >
+                {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", top:"-18px",right:"-3px",position:"absolute"}}></p>):null}
+                {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", top:"-18px",left:"-3px",position:"absolute"}}></p>):null}
+                {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", bottom:"-18px",left:"-3px",position:"absolute"}}></p>):null}
+                {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", bottom:"-18px",right:"-3px",position:"absolute"}}></p>):null}    
+                <input style={
                 {
                     borderStyle:'solid',
                     fontSize:item.fontSize, 
@@ -94,14 +114,22 @@ class frameItem extends Component
                     borderColor:item.borderColor,
                     borderRadius:item.borderR,
                     width:"200px",
-                    margin:"5px"
+                    margin:"5px",
+                    color:item.textColor,
                 }
-            }type="text"></input></div>)
+            }
+            type="text"
+            placeholder={item.property}></input></div>)
         }
         else if(item.type==="Container"){
             return <div
             style={(item.showSelect)?show:noShow}
-            ><div class="card" onClick={this.props.displayProperty} 
+            >
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", top:"-18px",right:"-3px",position:"absolute"}}></p>):null}
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", top:"-18px",left:"-3px",position:"absolute"}}></p>):null}
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", bottom:"-18px",left:"-3px",position:"absolute"}}></p>):null}
+            {(item.showSelect)?(<p style={{borderStyle:'solid', width:"1px", bottom:"-18px",right:"-3px",position:"absolute"}}></p>):null}    
+            <div class="card" onClick={this.props.displayProperty} 
             onMouseDown={this.dragItem}
             style={
                 {
@@ -114,7 +142,8 @@ class frameItem extends Component
                     borderWidth:item.borderT,
                     borderColor:item.borderColor,
                     borderRadius:item.borderR,
-                    margin:"5px"
+                    margin:"5px",
+                    color:item.textColor
                 }}
             >
             </div></div>

@@ -30,6 +30,7 @@ class editScreen extends Component{
         borderT:"",
         borderR:"",
         id:"",
+        textColor:"",
         currentWireframe:"none",
     }
 
@@ -54,6 +55,7 @@ class editScreen extends Component{
         this.setState({borderT:item.borderT})
         this.setState({borderR:item.borderR})
         this.setState({id:item.id})
+        this.setState({textColor:item.textColor})
         for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
             if(this.state.currentWireframe.panel.items[i].id==item.id){
                 this.state.currentWireframe.panel.items[i].showSelect=true;
@@ -77,9 +79,11 @@ class editScreen extends Component{
         this.setState({borderT:""})
         this.setState({borderR:""})
         this.setState({id:""})
+        this.setState({textColor:""})
     }
 
     addContainer=()=>{
+        this.removeDisplayProperty();
         console.log(this.state.currentWireframe)
         let newLabel = {
             "type": "Container",
@@ -94,7 +98,8 @@ class editScreen extends Component{
             "yCoord":0,
             "height":300,
             "width":300,
-            "showSelect":false
+            "showSelect":false,
+            "textColor":"rgb(0,0,0)"
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newLabel);
@@ -104,6 +109,7 @@ class editScreen extends Component{
 
     addLabel=()=>{
         console.log(this.state.currentWireframe)
+        this.removeDisplayProperty();
         let newLabel = {
             "type": "Label",
             "property":"label",
@@ -115,7 +121,8 @@ class editScreen extends Component{
             "id":this.state.currentWireframe.panel.itemCount+1,
             "xCoord":0,
             "yCoord":0,
-            "showSelect":false
+            "showSelect":false,
+            "textColor":"rgb(0,0,0)"
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newLabel);
@@ -124,6 +131,7 @@ class editScreen extends Component{
     }
 
     addButton=()=>{
+        this.removeDisplayProperty();
         let newButton = {
             "type": "Button",
             "property":"Button",
@@ -135,7 +143,8 @@ class editScreen extends Component{
             "id":this.state.currentWireframe.panel.itemCount+1,
             "xCoord":0,
             "yCoord":0,
-            "showSelect":false
+            "showSelect":false,
+            "textColor":"rgb(0,0,0)"
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newButton);
@@ -144,6 +153,7 @@ class editScreen extends Component{
     }
 
     addTextfield=()=>{
+        this.removeDisplayProperty();
         let newTextfield = {
             "type": "Textfield",
             "property":"Textfield",
@@ -155,7 +165,8 @@ class editScreen extends Component{
             "id":this.state.currentWireframe.panel.itemCount+1,
             "xCoord":0,
             "yCoord":0,
-            "showSelect":false
+            "showSelect":false,
+            "textColor":"rgb(0,0,0)"
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newTextfield);
@@ -202,10 +213,16 @@ class editScreen extends Component{
         e.stopPropagation();
         for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
             if(this.state.currentWireframe.panel.items[i].id===this.state.id){
-                this.state.currentWireframe.panel.items[i].property=e.target.value;
+                if(this.state.currentWireframe.panel.items[i].type==="Label" && e.target.value===""){
+                    this.state.currentWireframe.panel.items[i].property="NaN";
+                    this.setState({itemProperty:"NaN"})
+                }
+                else{
+                    this.state.currentWireframe.panel.items[i].property=e.target.value;
+                    this.setState({itemProperty:e.target.value})
+                }
             }
         }
-        this.setState({itemProperty:e.target.value})
     }
 
     changeBackground=(e)=>{
@@ -239,6 +256,15 @@ class editScreen extends Component{
             }
         }
         this.setState({bordercolor:e.target.value})
+    }
+
+    changeTextColor=(e)=>{
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                this.state.currentWireframe.panel.items[i].textColor=e.target.value;
+            }
+        }
+        this.setState({textColor:e.target.value})
     }
 
     changeBorderT=(e)=>{
@@ -447,6 +473,13 @@ class editScreen extends Component{
                         onChange={this.changeBorderR}
                         onFocus={this.removeDelete}
                         onBlur={this.addRemove.bind(this)}></input>
+                    </div>
+                    <div class="card" style={{height:"60px"}}>
+                        <span>Text Color:</span>
+                        <input style={{display:"inline-block", width:"40%" , position:"absolute", right:"10px"}} 
+                        value={this.state.textColor}
+                        onChange={this.changeTextColor}
+                        type="color"></input>
                     </div>
                 </div>
             </div>):null}
