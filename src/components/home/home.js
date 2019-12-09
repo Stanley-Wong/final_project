@@ -16,6 +16,7 @@ class home extends Component {
         var newFrame = {
             name:"UNKNOWN",
             owner:"UNKNOWN",
+            userId:this.props.auth.uid,
             timeStamp:new Date(),
             panel:{
                 bColor:"rgb(255,255,255)",
@@ -31,6 +32,7 @@ class home extends Component {
     }
 
     render() {
+        console.log(this.props.auth.uid)
         if (!this.props.auth.uid) {
             return <Redirect to="/login" />;
         }
@@ -41,7 +43,7 @@ class home extends Component {
             <div class="row">
                 <div class="col s4">
                     <h3>Recent Work</h3>
-                    <Links/>
+                    <Links loginId={this.props.auth.uid}/>
                 </div>
                 <div class="col s2">&nbsp;</div>
                 <div class="col s6" style={{textAlign:"center"}}>

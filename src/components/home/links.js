@@ -20,7 +20,7 @@ class links extends React.Component {
                 {
                 (this.props.wireFrames)?
                 this.props.wireFrames.sort(function(a,b){return a.timeStamp<b.timeStamp}).map(wireframe=>{
-                    return (
+                    return (wireframe.userId==this.props.loginId)?(
                     <div>
                         <Link to={"/editscreen/"+wireframe.id} onClick={()=>{
                             var firestore=getFirestore();
@@ -32,7 +32,7 @@ class links extends React.Component {
                             </div>
                         </Link>
                     </div>
-                    )
+                    ):null
                 }):null
                 }
             </div>

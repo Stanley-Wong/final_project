@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { firebaseConnect } from 'react-redux-firebase';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { getFirestore } from 'redux-firestore';
 import Panel from './items/panel';
 import { Link } from 'react-router-dom';
-import frameItem from './items/frameItem';
-
 
 class editScreen extends Component{
 
@@ -32,6 +29,7 @@ class editScreen extends Component{
         id:"",
         textColor:"",
         currentWireframe:"none",
+        scale:1
     }
 
     handleChange=(e)=>{
@@ -46,6 +44,13 @@ class editScreen extends Component{
     }
 
     displayProperty(item,e){
+        if(this.state.id!=""){
+            for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+                if(this.state.currentWireframe.panel.items[i].id===this.state.id){
+                    this.state.currentWireframe.panel.items[i].showSelect=false;
+                }
+            }
+        }
         document.addEventListener("keydown", this.handleKeyDown)
         e.stopPropagation();
         this.setState({itemProperty:item.property})
@@ -122,7 +127,9 @@ class editScreen extends Component{
             "xCoord":0,
             "yCoord":0,
             "showSelect":false,
-            "textColor":"rgb(0,0,0)"
+            "textColor":"rgb(0,0,0)",
+            "width":60,
+            "height":37.5
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newLabel);
@@ -144,7 +151,9 @@ class editScreen extends Component{
             "xCoord":0,
             "yCoord":0,
             "showSelect":false,
-            "textColor":"rgb(0,0,0)"
+            "textColor":"rgb(0,0,0)",
+            "width":64,
+            "height":21
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newButton);
@@ -166,7 +175,9 @@ class editScreen extends Component{
             "xCoord":0,
             "yCoord":0,
             "showSelect":false,
-            "textColor":"rgb(0,0,0)"
+            "textColor":"rgb(0,0,0)",
+            "width":200,
+            "height":50
         }
         let tempFrame = this.state.currentWireframe;
         tempFrame.panel.items.push(newTextfield);
@@ -180,6 +191,7 @@ class editScreen extends Component{
         console.log(this.state.currentWireframe)
         console.log(this.state.currentWireframe.panel.itemCount)
         console.log(this.state.itemProperty)
+        console.log(this.state.scale)
     }
 
     //When click save
@@ -195,6 +207,17 @@ class editScreen extends Component{
         }),1000);
     }
 
+    resetSelect=()=>{
+        let tempFrame = this.state.currentWireframe.panel;
+        for(let i=0; i<tempFrame.items.length; i++){
+            if(tempFrame.items[i].showSelect==true){
+                tempFrame.items[i].showSelect=false
+            }
+        }
+        var firestore = getFirestore();
+        firestore.collection('wireFrames').doc(this.props.id).update({panel:this.state.currentWireframe.panel})
+    }
+
     //when item is drag 
     dragItem=(x, y, id)=>{
         let itemDrag = null;
@@ -203,10 +226,25 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        itemDrag.xCoord=itemDrag.xCoord+x;
+        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608)
+            itemDrag.xCoord=itemDrag.xCoord+x;
+        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524)
         itemDrag.yCoord=itemDrag.yCoord+y;
         this.forceUpdate();
     }
+
+    dragBR=(x,y,id)=>{
+        let itemDrag = null;
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id==id){
+                itemDrag=this.state.currentWireframe.panel.items[i];
+            }
+        }
+        itemDrag.width=itemDrag.width+x;
+        itemDrag.height=itemDrag.height+y;
+        this.forceUpdate();
+    }
+    //
 
     //changing the item in edit screen. Five actions starts here
     changeItemProperty=(e)=>{
@@ -359,6 +397,20 @@ class editScreen extends Component{
     }
     //for overriding delete key when typing
 
+    zoomIn=()=>{
+        if(this.state.scale<=0.9){
+            console.log("zoom in")
+            this.setState({scale:this.state.scale+0.1})
+        }
+    }
+
+    zoomOut=()=>{
+        if(this.state.scale>=0.15){
+            console.log("zoom out")
+            this.setState({scale:this.state.scale-0.1})
+        }
+    }
+
     render(){
         const frames = this.props.wireFramesLists
         const id = this.props.id
@@ -383,8 +435,8 @@ class editScreen extends Component{
                 </div>
                 <div class="col s2 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", textAlign:"center"}}>
                     <div class="row" style={{borderStyle:"solid", borderWidth:"2px"}}>
-                        <i class="material-icons col s2">zoom_in</i>
-                        <i class="material-icons col s2">zoom_out</i>
+                        <i class="material-icons col s2" onClick={this.zoomIn}>zoom_in</i>
+                        <i class="material-icons col s2" onClick={this.zoomOut}>zoom_out</i>
                         <div onClick={this.updateFrame} class="col s3">Save</div>
                         <div onClick={this.warnUnsave} class="col s3">Close</div>
                     </div>
@@ -426,7 +478,10 @@ class editScreen extends Component{
                     <Panel frame={this.state.currentWireframe} 
                     displayProperty={this.displayProperty} 
                     drag={this.dragItem}
-                    removeDisplayProperty={this.removeDisplayProperty}/>
+                    dragBR={this.dragBR}
+                    removeDisplayProperty={this.removeDisplayProperty}
+                    scale={this.state.scale}
+                    />
                     :null}
                 </div>
                 <div class="col s3 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", position:"relative"}}>
@@ -490,7 +545,7 @@ class editScreen extends Component{
                 <div>Any unsave work will be lost</div>
                 <div>&nbsp;</div>
                 <Link to="/">
-                    <button>Yes</button>
+                    <button onClick={this.resetSelect}>Yes</button>
                 </Link>
                 <button onClick={this.closeWarning}>No</button>
             </div>
