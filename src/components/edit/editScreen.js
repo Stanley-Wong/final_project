@@ -13,6 +13,10 @@ class editScreen extends Component{
         this.displayProperty = this.displayProperty.bind(this)
     }
 
+    componentDidMount(){
+        document.addEventListener("keydown", this.handleKeyDown)
+    }
+
     componentWillUnmount(){
         document.removeEventListener("keydown", this.handleKeyDown)
     }
@@ -44,6 +48,8 @@ class editScreen extends Component{
     }
 
     displayProperty(item,e){
+        if(e!=null)
+            e.stopPropagation();
         if(this.state.id!=""){
             for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
                 if(this.state.currentWireframe.panel.items[i].id===this.state.id){
@@ -51,8 +57,6 @@ class editScreen extends Component{
                 }
             }
         }
-        document.addEventListener("keydown", this.handleKeyDown)
-        e.stopPropagation();
         this.setState({itemProperty:item.property})
         this.setState({fontSize:item.fontSize})
         this.setState({background:item.background})
@@ -70,7 +74,7 @@ class editScreen extends Component{
     }
 
     removeDisplayProperty=()=>{
-        document.removeEventListener("keydown", this.handleKeyDown)
+        console.log("remove runs")
         for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
             if(this.state.currentWireframe.panel.items[i].id==this.state.id){
                 this.state.currentWireframe.panel.items[i].showSelect=false;
@@ -208,17 +212,17 @@ class editScreen extends Component{
     }
 
     resetSelect=()=>{
-        let tempFrame = this.state.currentWireframe.panel;
+        let tempFrame = this.props.wireFramesLists[this.props.id].panel;
         for(let i=0; i<tempFrame.items.length; i++){
             if(tempFrame.items[i].showSelect==true){
                 tempFrame.items[i].showSelect=false
             }
         }
         var firestore = getFirestore();
-        firestore.collection('wireFrames').doc(this.props.id).update({panel:this.state.currentWireframe.panel})
+        firestore.collection('wireFrames').doc(this.props.id).update({panel:tempFrame})
     }
 
-    //when item is drag 
+    //when item is drag dragblock 
     dragItem=(x, y, id)=>{
         let itemDrag = null;
         for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
@@ -227,9 +231,9 @@ class editScreen extends Component{
             }
         }
         if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608)
-            itemDrag.xCoord=itemDrag.xCoord+x;
+            itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
         if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524)
-        itemDrag.yCoord=itemDrag.yCoord+y;
+            itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
         this.forceUpdate();
     }
 
@@ -240,10 +244,73 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        itemDrag.width=itemDrag.width+x;
-        itemDrag.height=itemDrag.height+y;
+        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608)
+            itemDrag.width=itemDrag.width+(x/this.state.scale);
+        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524)
+            itemDrag.height=itemDrag.height+(y/this.state.scale);
         this.forceUpdate();
     }
+
+    dragTR=(x,y,id)=>{
+        let itemDrag = null;
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id==id){
+                itemDrag=this.state.currentWireframe.panel.items[i];
+            }
+        }
+        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608)
+            itemDrag.width=itemDrag.width+(x/this.state.scale);
+        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524){
+            if(itemDrag.height-y>4){
+                itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
+                itemDrag.height=itemDrag.height-(y/this.state.scale);
+            }
+        }
+        this.forceUpdate(); 
+    }
+
+    dragBL=(x,y,id)=>{
+        let itemDrag = null;
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id==id){
+                itemDrag=this.state.currentWireframe.panel.items[i];
+            }
+        }
+        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608){
+            if(itemDrag.width-x>0)
+            {
+                itemDrag.width=itemDrag.width-(x/this.state.scale);
+                itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
+            }
+        }
+        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524){
+            itemDrag.height=itemDrag.height+(y/this.state.scale);
+        }
+        this.forceUpdate();
+    }
+
+    dragTL=(x,y,id)=>{
+        let itemDrag = null;
+        for(let i=0; i<this.state.currentWireframe.panel.items.length; i++){
+            if(this.state.currentWireframe.panel.items[i].id==id){
+                itemDrag=this.state.currentWireframe.panel.items[i];
+            }
+        }
+        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608){
+            if(itemDrag.width-x>4){
+                itemDrag.width=itemDrag.width-(x/this.state.scale);
+                itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
+            }
+        }
+        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524){
+            if(itemDrag.height-y>4){
+                itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
+                itemDrag.height=itemDrag.height-(y/this.state.scale);
+            }
+        }
+        this.forceUpdate(); 
+    }
+
     //
 
     //changing the item in edit screen. Five actions starts here
@@ -371,12 +438,13 @@ class editScreen extends Component{
         tempList.panel.items.push(temp);
         tempList.panel.itemCount=tempList.panel.itemCount+1;
         this.setState({currentWireframe:tempList})
+        this.displayProperty(this.state.currentWireframe.panel.items[this.state.currentWireframe.panel.items.length-1],null);
     }
 
     handleKeyDown = (e) =>{
-        if(e.keyCode===8){
+        if(e.keyCode===46){
             e.preventDefault();
-            console.log("backspace clicked")
+            console.log("delete clicked")
             this.deleteItem();
         }
         if(e.keyCode===68 && e.ctrlKey){
@@ -384,18 +452,8 @@ class editScreen extends Component{
             console.log("Copy")
             this.copyItem();
         }
-        console.log(e.ctrlKey)
+        console.log(e.keyCode)
     }
-
-    //for overriding delete key when typing
-    removeDelete=()=>{
-        document.removeEventListener("keydown", this.handleKeyDown);
-    }
-
-    addRemove=()=>{
-        document.addEventListener("keydown", this.handleKeyDown);
-    }
-    //for overriding delete key when typing
 
     zoomIn=()=>{
         if(this.state.scale<=0.9){
@@ -479,6 +537,9 @@ class editScreen extends Component{
                     displayProperty={this.displayProperty} 
                     drag={this.dragItem}
                     dragBR={this.dragBR}
+                    dragTR={this.dragTR}
+                    dragBL={this.dragBL}
+                    dragTL={this.dragTL}
                     removeDisplayProperty={this.removeDisplayProperty}
                     scale={this.state.scale}
                     />
@@ -487,16 +548,12 @@ class editScreen extends Component{
                 <div class="col s3 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", position:"relative"}}>
                     <div>Properties</div>
                     <input value={this.state.itemProperty} 
-                    onChange={this.changeItemProperty}
-                    onFocus={this.removeDelete}
-                    onBlur={this.addRemove.bind(this)}/>
+                    onChange={this.changeItemProperty}/>
                     <div class="card" style={{height:"60px"}}>
                         <span>FontSize:</span>
                         <input style={{display:"inline-block", width:"40%", position:"absolute", right:"10px"}} 
                         value={this.state.fontSize}
                         onChange={this.changeFontSize}
-                        onFocus={this.removeDelete}
-                        onBlur={this.addRemove.bind(this)}
                         ></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
@@ -517,17 +574,13 @@ class editScreen extends Component{
                         <span>Border Thickness:</span>
                         <input style={{display:"inline-block", width:"40%", position:"absolute", right:"10px"}} 
                         value={this.state.borderT.slice(0,this.state.borderT.length-2)}
-                        onChange={this.changeBorderT}
-                        onFocus={this.removeDelete}
-                        onBlur={this.addRemove.bind(this)}></input>
+                        onChange={this.changeBorderT}></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
                         <span>Border Radius:</span>
                         <input style={{display:"inline-block", width:"40%", position:"absolute", right:"10px"}} 
                         value={this.state.borderR.slice(0,this.state.borderR.length-2)}
-                        onChange={this.changeBorderR}
-                        onFocus={this.removeDelete}
-                        onBlur={this.addRemove.bind(this)}></input>
+                        onChange={this.changeBorderR}></input>
                     </div>
                     <div class="card" style={{height:"60px"}}>
                         <span>Text Color:</span>

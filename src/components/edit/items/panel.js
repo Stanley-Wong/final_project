@@ -15,7 +15,7 @@ class panel extends Component{
         const backgroundStyle={background:this.state.color, height:(this.state.height)+'px', borderStyle:"solid", borderWidth:"1px", transform:"scale("+this.props.scale+")"};
         return(
             <div class="card" style={backgroundStyle}
-            onClick={this.props.removeDisplayProperty}
+            onMouseDown={this.props.removeDisplayProperty}
             id="corner"
             >
                 {this.state.items.map(item=>(
@@ -24,6 +24,9 @@ class panel extends Component{
                         displayProperty={this.props.displayProperty.bind(this,item)}
                         dragging={this.props.drag}
                         draggingBR={this.props.dragBR}
+                        draggingTR={this.props.dragTR}
+                        draggingBL={this.props.dragBL}
+                        draggingTL={this.props.dragTL}
                     /> 
                 ))}
             </div>
