@@ -35,7 +35,9 @@ class editScreen extends Component{
         currentWireframe:"none",
         width:598.167,
         height:530,
-        scale:1
+        scale:1,
+        changedDimensionWidth:false,
+        changedDimensionHeight:false
     }
 
     handleChange=(e)=>{
@@ -48,11 +50,28 @@ class editScreen extends Component{
     changeWidth=(e)=>{
         const { target } = e;
         this.setState({width:target.value});
+        if(this.props.wireFramesLists[this.props.id].panel.width!=target.value)
+            this.setState({changedDimensionWidth:true})
+        else
+            this.setState({changedDimensionWidth:false})
     }
 
     changeHeight=(e)=>{
         const { target } = e;
         this.setState({height:target.value});
+        if(this.props.wireFramesLists[this.props.id].panel.height!=target.value)
+            this.setState({changedDimensionHeight:true})
+        else
+            this.setState({changedDimensionHeight:false})
+    }
+
+    changeDimension=()=>{
+        console.log("this runssss")
+        let tempWire = this.state.currentWireframe;
+        console.log(tempWire)
+        tempWire.panel.width=parseFloat(this.state.width);
+        tempWire.panel.height=parseFloat(this.state.height);
+        this.setState({currentWireframe:tempWire})
     }
 
     onDrag=(e)=>{
@@ -242,7 +261,7 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608)
+        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=592.167)
             itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
         if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524)
             itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
@@ -256,7 +275,7 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x+itemDrag.width<=608)
+        if(itemDrag.xCoord+x+itemDrag.width<=592.167)
             itemDrag.width=itemDrag.width+(x/this.state.scale);
         if(itemDrag.yCoord+y+itemDrag.height<=524)
             itemDrag.height=itemDrag.height+(y/this.state.scale);
@@ -271,8 +290,8 @@ class editScreen extends Component{
             }
         }
         console.log(itemDrag.xCoord+x>=-6)
-        console.log(itemDrag.xCoord+x+itemDrag.width<=608)
-        if(itemDrag.xCoord+x+itemDrag.width<=608)
+        console.log(itemDrag.xCoord+x+itemDrag.width<=592.167)
+        if(itemDrag.xCoord+x+itemDrag.width<=592.167)
             itemDrag.width=itemDrag.width+(x/this.state.scale);
         if(itemDrag.yCoord+y>=-6){
             if(itemDrag.height-y>4){
@@ -480,16 +499,6 @@ class editScreen extends Component{
         }
     }
 
-    changeWireFrameDimension=()=>{
-        console.log(this.props.wireFramesLists[this.props.id].panel.width)
-        console.log(this.props.wireFramesLists[this.props.id].panel.height)
-        if(this.props.wireFramesLists[this.props.id].panel.width!=this.state.width ||
-            this.props.wireFramesLists[this.props.id].panel.height!=this.state.height){
-                return true;
-        }
-        return false;
-    }
-
     render(){
         const frames = this.props.wireFramesLists
         const id = this.props.id
@@ -613,17 +622,17 @@ class editScreen extends Component{
                 </div>
                 <div class="card col s5" style={{height:"50px"}}>
                     <span style={{display:"inline-block"}}>Width:&nbsp;</span>
-                    <input id="name" style={{display:"inline-block", width:"350px"}} type='text' defaultValue={frames[id].panel.width}
+                    <input id="name" style={{display:"inline-block", width:"350px"}} type='text' defaultValue={this.props.wireFramesLists[this.props.id].panel.width}
                     onChange={this.changeWidth}/>
                 </div>
                 <div class="card col s5" style={{height:"50px"}}>
                     <span style={{display:"inline-block"}}>Height:&nbsp;</span>
-                    <input id="owner" style={{display:"inline-block" , width:"350px"}} type='text' defaultValue={frames[id].panel.height}
+                    <input id="owner" style={{display:"inline-block" , width:"350px"}} type='text' defaultValue={this.props.wireFramesLists[this.props.id].panel.height}
                     onChange={this.changeHeight}/>
                 </div>
                 <div class="col s2">
-                    {(this.changeWireFrameDimension)? 
-                    <button>Submitt</button>:
+                    {(this.state.changedDimensionWidth || this.state.changedDimensionHeight)? 
+                    <button onClick={this.changeDimension}>Submit</button>:
                     <button disabled="true">Submit</button>}
                 </div>
             </div>

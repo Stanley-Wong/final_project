@@ -3,22 +3,15 @@ import FrameItem from './frameItem'
 
 class panel extends Component{
     
-    
-    state={
-        color:this.props.frame.panel.bColor,
-        height:this.props.frame.panel.height,
-        width:this.props.frame.panel.width,
-        items:this.props.frame.panel.items,
-    }
 
     render(){
-        const backgroundStyle={background:this.state.color, height:(this.state.height)+'px', width:(this.state.width) ,borderStyle:"solid", borderWidth:"1px", transform:"scale("+this.props.scale+")"};
+        const backgroundStyle={background:this.props.frame.panel.bColor, height:(this.props.frame.panel.height)+'px', width:(this.props.frame.panel.width) ,borderStyle:"solid", borderWidth:"1px", transform:"scale("+this.props.scale+")"};
         return(
             <div class="card" style={backgroundStyle}
             onMouseDown={this.props.removeDisplayProperty}
             id="corner"
             >
-                {this.state.items.map(item=>(
+                {this.props.frame.panel.items.map(item=>(
                         <FrameItem 
                         item={item}
                         displayProperty={this.props.displayProperty.bind(this,item)}
