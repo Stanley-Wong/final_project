@@ -33,8 +33,8 @@ class editScreen extends Component{
         id:"",
         textColor:"",
         currentWireframe:"none",
-        width:598.167,
-        height:530,
+        width:"",
+        height:"",
         scale:1,
         changedDimensionWidth:false,
         changedDimensionHeight:false
@@ -50,7 +50,7 @@ class editScreen extends Component{
     changeWidth=(e)=>{
         const { target } = e;
         this.setState({width:target.value});
-        if(this.props.wireFramesLists[this.props.id].panel.width!=target.value)
+        if(this.state.currentWireframe.panel.width!=target.value)
             this.setState({changedDimensionWidth:true})
         else
             this.setState({changedDimensionWidth:false})
@@ -59,7 +59,7 @@ class editScreen extends Component{
     changeHeight=(e)=>{
         const { target } = e;
         this.setState({height:target.value});
-        if(this.props.wireFramesLists[this.props.id].panel.height!=target.value)
+        if(this.state.currentWireframe.panel.height!=target.value)
             this.setState({changedDimensionHeight:true})
         else
             this.setState({changedDimensionHeight:false})
@@ -261,10 +261,8 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=592.167)
-            itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
-        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524)
-            itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
+        itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
+        itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
         this.forceUpdate();
     }
 
@@ -275,9 +273,9 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x+itemDrag.width<=592.167)
+/*         if(itemDrag.xCoord+x+itemDrag.width<=this.state.width-6) */
             itemDrag.width=itemDrag.width+(x/this.state.scale);
-        if(itemDrag.yCoord+y+itemDrag.height<=524)
+/*         if(itemDrag.yCoord+y+itemDrag.height<=this.state.height-6) */
             itemDrag.height=itemDrag.height+(y/this.state.scale);
         this.forceUpdate();
     }
@@ -290,15 +288,15 @@ class editScreen extends Component{
             }
         }
         console.log(itemDrag.xCoord+x>=-6)
-        console.log(itemDrag.xCoord+x+itemDrag.width<=592.167)
-        if(itemDrag.xCoord+x+itemDrag.width<=592.167)
-            itemDrag.width=itemDrag.width+(x/this.state.scale);
-        if(itemDrag.yCoord+y>=-6){
-            if(itemDrag.height-y>4){
-                itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
-                itemDrag.height=itemDrag.height-(y/this.state.scale);
-            }
+        console.log(itemDrag.xCoord+x+itemDrag.width<=this.state.width-6)
+        /* if(itemDrag.xCoord+x+itemDrag.width<=this.state.width-6) */
+        itemDrag.width=itemDrag.width+(x/this.state.scale);
+        /* if(itemDrag.yCoord+y>=-6){ */
+        if(itemDrag.height-y>4){
+            itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
+            itemDrag.height=itemDrag.height-(y/this.state.scale);
         }
+        /* } */
         this.forceUpdate(); 
     }
 
@@ -309,16 +307,16 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x>=-6){
+/*         if(itemDrag.xCoord+x>=-6){ */
             if(itemDrag.width-x>0)
             {
                 itemDrag.width=itemDrag.width-(x/this.state.scale);
                 itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
             }
-        }
-        if(itemDrag.yCoord+y+itemDrag.height<=524){
+/*         } */
+/*         if(itemDrag.yCoord+y+itemDrag.height<=this.state.height-6){ */
             itemDrag.height=itemDrag.height+(y/this.state.scale);
-        }
+/*         } */
         this.forceUpdate();
     }
 
@@ -329,18 +327,18 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x>=-6){
+/*         if(itemDrag.xCoord+x>=-6){ */
             if(itemDrag.width-x>4){
                 itemDrag.width=itemDrag.width-(x/this.state.scale);
                 itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
             }
-        }
-        if(itemDrag.yCoord+y>=-6){
+/*         } */
+/*         if(itemDrag.yCoord+y>=-6){ */
             if(itemDrag.height-y>4){
                 itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
                 itemDrag.height=itemDrag.height-(y/this.state.scale);
             }
-        }
+/*         } */
         this.forceUpdate(); 
     }
 
@@ -505,6 +503,8 @@ class editScreen extends Component{
         if(this.props.wireFramesLists){
             if(this.state.currentWireframe==="none"){
                 this.setState({currentWireframe:this.props.wireFramesLists[this.props.id]})
+                this.setState({height:this.props.wireFramesLists[this.props.id].panel.height})
+                this.setState({width:this.props.wireFramesLists[this.props.id].panel.width})
             }
         }
         return(
@@ -523,8 +523,8 @@ class editScreen extends Component{
                 </div>
                 <div class="col s2 card" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", textAlign:"center"}}>
                     <div class="row" style={{borderStyle:"solid", borderWidth:"2px"}}>
-                        <i class="material-icons col s2" onClick={this.zoomIn}>zoom_in</i>
-                        <i class="material-icons col s2" onClick={this.zoomOut}>zoom_out</i>
+                        <div class="col s2" style={{border:"solid", borderWidth:"1px"}} onClick={this.zoomIn}>+</div>
+                        <div class="col s2" style={{border:"solid", borderWidth:"1px"}} onClick={this.zoomOut}>-</div>
                         <div onClick={this.updateFrame} class="col s3">Save</div>
                         <div onClick={this.warnUnsave} class="col s3">Close</div>
                     </div>
