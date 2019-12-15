@@ -12,7 +12,7 @@ class panel extends Component{
     }
 
     render(){
-        const backgroundStyle={background:this.state.color, height:(this.state.height)+'px', borderStyle:"solid", borderWidth:"1px", transform:"scale("+this.props.scale+")"};
+        const backgroundStyle={background:this.state.color, height:(this.state.height)+'px', width:(this.state.width) ,borderStyle:"solid", borderWidth:"1px", transform:"scale("+this.props.scale+")"};
         return(
             <div class="card" style={backgroundStyle}
             onMouseDown={this.props.removeDisplayProperty}

@@ -56,7 +56,7 @@ class LoginScreen extends Component {
               <h3>Login</h3>
               <input id="email" style={inputBox} type="text" placeholder="Email Address" onChange={this.handleChange}></input>
               <div>&nbsp;</div>
-              <input id="password" style={inputBox} type="text" placeholder="Password" onChange={this.handleChange}></input>
+              <input id="password" style={inputBox} type="password" placeholder="Password" onChange={this.handleChange}></input>
               <div>&nbsp;</div>
               <div>
                 <a class="waves-effect waves-light btn" onClick={this.handleSubmit}>Login</a>

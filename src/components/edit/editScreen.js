@@ -33,6 +33,8 @@ class editScreen extends Component{
         id:"",
         textColor:"",
         currentWireframe:"none",
+        width:598.167,
+        height:530,
         scale:1
     }
 
@@ -41,6 +43,16 @@ class editScreen extends Component{
         this.setState({[target.id]: target.value});
         var firestore = getFirestore();
         firestore.collection('wireFrames').doc(this.props.id).update({[target.id]: target.value});
+    }
+
+    changeWidth=(e)=>{
+        const { target } = e;
+        this.setState({width:target.value});
+    }
+
+    changeHeight=(e)=>{
+        const { target } = e;
+        this.setState({height:target.value});
     }
 
     onDrag=(e)=>{
@@ -98,7 +110,7 @@ class editScreen extends Component{
             "type": "Container",
             "property":"container",
             "fontSize":25,
-            "background":"rgb(255,255,255)",
+            "background":"#ffffff",
             "borderColor":"black",
             "borderT":'2px',
             "borderR":'2px',
@@ -123,7 +135,7 @@ class editScreen extends Component{
             "type": "Label",
             "property":"label",
             "fontSize":25,
-            "background":"rgba(0,0,0,0)",
+            "background":"#ffffff",
             "borderColor":"black",
             "borderT":'0px',
             "borderR":'0px',
@@ -147,7 +159,7 @@ class editScreen extends Component{
             "type": "Button",
             "property":"Button",
             "fontSize":15,
-            "background":"rgb(255,255,255)",
+            "background":"#ffffff",
             "borderColor":"black",
             "borderT":'2px',
             "borderR":'5px',
@@ -171,7 +183,7 @@ class editScreen extends Component{
             "type": "Textfield",
             "property":"Textfield",
             "fontSize":15,
-            "background":"rgb(255,255,255)",
+            "background":"#ffffff",
             "borderColor":"black",
             "borderT":'2px',
             "borderR":'5px',
@@ -244,9 +256,9 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608)
+        if(itemDrag.xCoord+x+itemDrag.width<=608)
             itemDrag.width=itemDrag.width+(x/this.state.scale);
-        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524)
+        if(itemDrag.yCoord+y+itemDrag.height<=524)
             itemDrag.height=itemDrag.height+(y/this.state.scale);
         this.forceUpdate();
     }
@@ -258,9 +270,11 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608)
+        console.log(itemDrag.xCoord+x>=-6)
+        console.log(itemDrag.xCoord+x+itemDrag.width<=608)
+        if(itemDrag.xCoord+x+itemDrag.width<=608)
             itemDrag.width=itemDrag.width+(x/this.state.scale);
-        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524){
+        if(itemDrag.yCoord+y>=-6){
             if(itemDrag.height-y>4){
                 itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
                 itemDrag.height=itemDrag.height-(y/this.state.scale);
@@ -276,14 +290,14 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608){
+        if(itemDrag.xCoord+x>=-6){
             if(itemDrag.width-x>0)
             {
                 itemDrag.width=itemDrag.width-(x/this.state.scale);
                 itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
             }
         }
-        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524){
+        if(itemDrag.yCoord+y+itemDrag.height<=524){
             itemDrag.height=itemDrag.height+(y/this.state.scale);
         }
         this.forceUpdate();
@@ -296,13 +310,13 @@ class editScreen extends Component{
                 itemDrag=this.state.currentWireframe.panel.items[i];
             }
         }
-        if(itemDrag.xCoord+x>=-6 && itemDrag.xCoord+x+itemDrag.width<=608){
+        if(itemDrag.xCoord+x>=-6){
             if(itemDrag.width-x>4){
                 itemDrag.width=itemDrag.width-(x/this.state.scale);
                 itemDrag.xCoord=itemDrag.xCoord+(x/this.state.scale);
             }
         }
-        if(itemDrag.yCoord+y>=-6 && itemDrag.yCoord+y+itemDrag.height<=524){
+        if(itemDrag.yCoord+y>=-6){
             if(itemDrag.height-y>4){
                 itemDrag.yCoord=itemDrag.yCoord+(y/this.state.scale);
                 itemDrag.height=itemDrag.height-(y/this.state.scale);
@@ -456,10 +470,7 @@ class editScreen extends Component{
     }
 
     zoomIn=()=>{
-        if(this.state.scale<=0.9){
-            console.log("zoom in")
-            this.setState({scale:this.state.scale+0.1})
-        }
+        this.setState({scale:this.state.scale+0.1})
     }
 
     zoomOut=()=>{
@@ -467,6 +478,16 @@ class editScreen extends Component{
             console.log("zoom out")
             this.setState({scale:this.state.scale-0.1})
         }
+    }
+
+    changeWireFrameDimension=()=>{
+        console.log(this.props.wireFramesLists[this.props.id].panel.width)
+        console.log(this.props.wireFramesLists[this.props.id].panel.height)
+        if(this.props.wireFramesLists[this.props.id].panel.width!=this.state.width ||
+            this.props.wireFramesLists[this.props.id].panel.height!=this.state.height){
+                return true;
+        }
+        return false;
     }
 
     render(){
@@ -531,7 +552,7 @@ class editScreen extends Component{
                         </div>
                     </div>
                 </div>
-                <div class="col s7 card grey" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", background:""}}>
+                <div class="col s7 card grey" style={{height:"550px",borderStyle:"solid", borderWidth:"2px", background:"", overflow:"auto"}}>
                     {(this.state.currentWireframe)?
                     <Panel frame={this.state.currentWireframe} 
                     displayProperty={this.displayProperty} 
@@ -590,7 +611,23 @@ class editScreen extends Component{
                         type="color"></input>
                     </div>
                 </div>
-            </div>):null}
+                <div class="card col s5" style={{height:"50px"}}>
+                    <span style={{display:"inline-block"}}>Width:&nbsp;</span>
+                    <input id="name" style={{display:"inline-block", width:"350px"}} type='text' defaultValue={frames[id].panel.width}
+                    onChange={this.changeWidth}/>
+                </div>
+                <div class="card col s5" style={{height:"50px"}}>
+                    <span style={{display:"inline-block"}}>Height:&nbsp;</span>
+                    <input id="owner" style={{display:"inline-block" , width:"350px"}} type='text' defaultValue={frames[id].panel.height}
+                    onChange={this.changeHeight}/>
+                </div>
+                <div class="col s2">
+                    {(this.changeWireFrameDimension)? 
+                    <button>Submitt</button>:
+                    <button disabled="true">Submit</button>}
+                </div>
+            </div>
+            ):null}
             <div id="popUp" class="card blue">Your wireframer has been saved!</div>
             <div id="warning" class="card blue">
                 <div>Are you sure you want to close the window?</div>
@@ -602,7 +639,6 @@ class editScreen extends Component{
                 </Link>
                 <button onClick={this.closeWarning}>No</button>
             </div>
-            <button onClick={this.showStates}>click to show state</button>
             </div>
         )
     }

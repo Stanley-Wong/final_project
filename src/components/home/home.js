@@ -21,6 +21,7 @@ class home extends Component {
             panel:{
                 bColor:"rgb(255,255,255)",
                 height:530,
+                width:598.167,
                 items:[],
                 itemCount:0
             }

@@ -17,6 +17,7 @@ class register extends Component {
     password: '',
     firstName: '',
     lastName: '',
+    inputError:false
   }
 
   handleChange = (e) => {
@@ -35,7 +36,13 @@ class register extends Component {
     const { firebase } = props;
     const newUser = { ...state };
 
-    props.register(newUser, firebase);
+
+    if(this.state.email!="" && this.state.password!="" && this.state.firstName && this.state.lastName!=""){
+      props.register(newUser, firebase);
+      this.setState({inputError:false})
+    }
+    else
+      this.setState({inputError:true})
   }
 
   render() {
@@ -43,7 +50,6 @@ class register extends Component {
     if (auth.uid) {
       return <Redirect to="/" />;
     }
-
     return (
       <div class="row">
           <div class="col s4">
@@ -58,6 +64,7 @@ class register extends Component {
               <div>&nbsp;</div>
               <div>
                 <a class="waves-effect waves-light btn" onClick={this.handleSubmit}>Register</a>
+                {this.state.inputError ? <div className="red-text center"><p>Register Error</p></div> : null}
                 {authError ? <div className="red-text center"><p>{authError}</p></div> : null}
               </div>
           </div>

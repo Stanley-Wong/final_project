@@ -125,23 +125,29 @@ class frameItem extends Component
             top:item.yCoord+"px",
             border:"1px solid",
             background:"rgba(255,255,255,0)",
-            textAlign:"center"
+            textAlign:"center",
+            height:(parseInt(item.height)+12>10)?parseInt(item.height)+12+"px":"15px",
+            width:(parseInt(item.width)+12>10)?parseInt(item.width)+12+"px":"15px",
+            overflow:"hidden"
         }
         let noShow={
             position:"absolute",
             left:item.xCoord+"px",
             top:item.yCoord+"px",
             background:"rgba(255,255,255,0)",
-            textAlign:"center"
+            textAlign:"center",
+            overflow:"hidden",
+            height:(parseInt(item.height)+12>5)?parseInt(item.height)+12+"px":"15px",
+            width:(parseInt(item.width)+12>5)?parseInt(item.width)+12+"px":"15px",
         }
         if(item.type==="Label"){
             return <div 
             style={(item.showSelect)?show:noShow}
             >
-            {(item.showSelect)?(<div onMouseDown={this.dragTR} style={{background:"black", width:"6px", height:"6px", top:"-3px",right:"-3px",position:"absolute"}}></div>):null}
-            {(item.showSelect)?(<div onMouseDown={this.dragTL} style={{background:"black", width:"6px", height:"6px", top:"-3px",left:"-3px",position:"absolute"}}></div>):null}
-            {(item.showSelect)?(<div onMouseDown={this.dragBL}style={{background:"black", width:"6px", height:"6px", bottom:"-3px",left:"-3px",position:"absolute"}}></div>):null}
-            {(item.showSelect)?(<div onMouseDown={this.dragBR} style={{background:"black", width:"6px", height:"6px", bottom:"-3px",right:"-3px",position:"absolute"}}></div>):null}    
+            {(item.showSelect)?(<div onMouseDown={this.dragTR} style={{background:"black", width:"10px", height:"10px", top:"-3px",right:"-3px",position:"absolute"}}></div>):null}
+            {(item.showSelect)?(<div onMouseDown={this.dragTL} style={{background:"black", width:"10px", height:"10px", top:"-3px",left:"-3px",position:"absolute"}}></div>):null}
+            {(item.showSelect)?(<div onMouseDown={this.dragBL}style={{background:"black", width:"10px", height:"10px", bottom:"-3px",left:"-3px",position:"absolute"}}></div>):null}
+            {(item.showSelect)?(<div onMouseDown={this.dragBR} style={{background:"black", width:"10px", height:"10px", bottom:"-3px",right:"-3px",position:"absolute"}}></div>):null}    
             <div 
             onClick={this.props.displayProperty} 
             onMouseDown={this.dragItem}
@@ -165,10 +171,10 @@ class frameItem extends Component
             onMouseDown={this.dragItem}
             style={(item.showSelect)?show:noShow}
             >
-            {(item.showSelect)?(<div onMouseDown={this.dragTR} style={{background:"black", width:"6px", height:"6px", top:"-3px",right:"-3px",position:"absolute"}}></div>):null}
-            {(item.showSelect)?(<div onMouseDown={this.dragTL} style={{background:"black", width:"6px", height:"6px", top:"-3px",left:"-3px",position:"absolute"}}></div>):null}
-            {(item.showSelect)?(<div onMouseDown={this.dragBL} style={{background:"black", width:"6px", height:"6px", bottom:"-3px",left:"-3px",position:"absolute"}}></div>):null}
-            {(item.showSelect)?(<div onMouseDown={this.dragBR} style={{background:"black", width:"6px", height:"6px", bottom:"-3px",right:"-3px",position:"absolute"}}></div>):null}    
+            {(item.showSelect)?(<div onMouseDown={this.dragTR} style={{background:"black", width:"10px", height:"10px", top:"-3px",right:"-3px",position:"absolute"}}></div>):null}
+            {(item.showSelect)?(<div onMouseDown={this.dragTL} style={{background:"black", width:"10px", height:"10px", top:"-3px",left:"-3px",position:"absolute"}}></div>):null}
+            {(item.showSelect)?(<div onMouseDown={this.dragBL} style={{background:"black", width:"10px", height:"10px", bottom:"-3px",left:"-3px",position:"absolute"}}></div>):null}
+            {(item.showSelect)?(<div onMouseDown={this.dragBR} style={{background:"black", width:"10px", height:"10px", bottom:"-3px",right:"-3px",position:"absolute"}}></div>):null}    
             <button style={
             {
                 borderStyle:'solid',
@@ -190,10 +196,10 @@ class frameItem extends Component
                 onMouseDown={this.dragItem}
                 style={(item.showSelect)?show:noShow}
                 >
-                {(item.showSelect)?(<div onMouseDown={this.dragTR} style={{background:"black", width:"6px", height:"6px", top:"-3px",right:"-3px",position:"absolute"}}></div>):null}
-                {(item.showSelect)?(<div onMouseDown={this.dragTL} style={{background:"black", width:"6px", height:"6px", top:"-3px",left:"-3px",position:"absolute"}}></div>):null}
-                {(item.showSelect)?(<div onMouseDown={this.dragBL} style={{background:"black", width:"6px", height:"6px", bottom:"-3px",left:"-3px",position:"absolute"}}></div>):null}
-                {(item.showSelect)?(<div onMouseDown={this.dragBR} style={{background:"black", width:"6px", height:"6px", bottom:"-3px",right:"-3px",position:"absolute"}}></div>):null}    
+                {(item.showSelect)?(<div onMouseDown={this.dragTR} style={{background:"black", width:"10px", height:"10px", top:"-3px",right:"-3px",position:"absolute"}}></div>):null}
+                {(item.showSelect)?(<div onMouseDown={this.dragTL} style={{background:"black", width:"10px", height:"10px", top:"-3px",left:"-3px",position:"absolute"}}></div>):null}
+                {(item.showSelect)?(<div onMouseDown={this.dragBL} style={{background:"black", width:"10px", height:"10px", bottom:"-3px",left:"-3px",position:"absolute"}}></div>):null}
+                {(item.showSelect)?(<div onMouseDown={this.dragBR} style={{background:"black", width:"10px", height:"10px", bottom:"-3px",right:"-3px",position:"absolute"}}></div>):null}    
                 <input style={
                 {
                     borderStyle:'solid',
@@ -215,10 +221,10 @@ class frameItem extends Component
             return <div
             style={(item.showSelect)?show:noShow}
             >
-            {(item.showSelect)?(<div onMouseDown={this.dragTR} style={{background:"black", width:"6px", height:"6px", top:"-3px",right:"-3px",position:"absolute"}}></div>):null}
-            {(item.showSelect)?(<div onMouseDown={this.dragTL} style={{background:"black", width:"6px", height:"6px", top:"-3px",left:"-3px",position:"absolute"}}></div>):null}
-            {(item.showSelect)?(<div onMouseDown={this.dragBL} style={{background:"black", width:"6px", height:"6px", bottom:"-3px",left:"-3px",position:"absolute"}}></div>):null}
-            {(item.showSelect)?(<div onMouseDown={this.dragBR} style={{background:"black", width:"6px", height:"6px", bottom:"-3px",right:"-3px",position:"absolute"}}></div>):null}    
+            {(item.showSelect)?(<div onMouseDown={this.dragTR} style={{background:"black", width:"10px", height:"10px", top:"-3px",right:"-3px",position:"absolute"}}></div>):null}
+            {(item.showSelect)?(<div onMouseDown={this.dragTL} style={{background:"black", width:"10px", height:"10px", top:"-3px",left:"-3px",position:"absolute"}}></div>):null}
+            {(item.showSelect)?(<div onMouseDown={this.dragBL} style={{background:"black", width:"10px", height:"10px", bottom:"-3px",left:"-3px",position:"absolute"}}></div>):null}
+            {(item.showSelect)?(<div onMouseDown={this.dragBR} style={{background:"black", width:"10px", height:"10px", bottom:"-3px",right:"-3px",position:"absolute"}}></div>):null}    
             <div class="card" onClick={this.props.displayProperty} 
             onMouseDown={this.dragItem}
             style={
